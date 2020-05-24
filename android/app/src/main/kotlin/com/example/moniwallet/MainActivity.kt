@@ -1,4 +1,4 @@
-package com.altechtic.moniwallet.moniwallet
+package com.example.moniwallet
 
 import io.flutter.embedding.android.FlutterActivity
 
