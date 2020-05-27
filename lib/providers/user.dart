@@ -39,13 +39,15 @@ class UserModel extends ChangeNotifier {
   bool get isloading => _isLoading;
 
   Future login(String username, String password, context,
-      {isRefresh: false}) async {
+      {bool isRefresh: false}) async {
     var user = Provider.of<UserModel>(context, listen: false);
 
     try {
       user.setLoading(true);
       //print('loading');
-      final response = await http.post('$url/api/login', body: {
+      var link = '$url/api/login';
+      link = isRefresh ? "$link?refresh=yes" : link;
+      final response = await http.post(link, body: {
         'username': username,
         'password': password,
       }, headers: {
