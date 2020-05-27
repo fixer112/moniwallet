@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -23,16 +25,19 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     var user = Provider.of<UserModel>(context, listen: false);
-    getJson().then((json) {
-      if (json != null) {
-        user.setUser(User.fromMap(json));
+    getJson().then((u) {
+      if (u != null) {
+        //u['latest_transactions'] =
+        user.setUser(User.fromMap(json.decode(u)));
+        Get.to(Home());
+        //print(json.decode(u)['id']);
       }
       print(user.getUser);
     });
 
-    if (user.getUser != null) {
+    /* if (user.getUser != null) {
       Get.to(Home());
-    }
+    } */
 
     super.initState();
   }

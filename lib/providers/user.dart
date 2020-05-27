@@ -59,7 +59,7 @@ class UserModel extends ChangeNotifier {
         if (body != null) {
           var u = User.fromMap(body);
           setUser(u);
-          await saveJson(u.toJson());
+          await saveJson(jsonEncode(u));
           //await saveJson('credentials', {'username': username});
         }
         //user.user.settings = body['settings'];

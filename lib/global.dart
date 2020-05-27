@@ -75,13 +75,12 @@ localStorage() async {
   return storage;
 }
 
-Future<Null> saveJson(Map<String, dynamic> content,
-    {String fileName = 'user.json'}) async {
+Future<Null> saveJson(String content, {String fileName = 'user.json'}) async {
   Directory appDocDir = await getApplicationDocumentsDirectory();
   String path = appDocDir.path;
   File file = new File(path + "/" + fileName);
   file.createSync();
-  file.writeAsStringSync(jsonEncode(content));
+  file.writeAsStringSync((content));
 }
 
 Future<Null> saveString(String key, value) async {
@@ -89,12 +88,12 @@ Future<Null> saveString(String key, value) async {
   prefs.setString(key, (value));
 }
 
-Future<Map<String, dynamic>> getJson({String fileName = 'user.json'}) async {
+Future getJson({String fileName = 'user.json'}) async {
   Directory appDocDir = await getApplicationDocumentsDirectory();
   String path = appDocDir.path;
   var jsonFile = new File(path + "/" + fileName);
   bool fileExists = jsonFile.existsSync();
-  return fileExists ? jsonDecode(jsonFile.readAsStringSync()) : null;
+  return fileExists ? (jsonFile.readAsStringSync()) : null;
 }
 
 Future<String> getString(String key) async {
@@ -103,7 +102,6 @@ Future<String> getString(String key) async {
 }
 
 Future<Null> removeJson({String fileName = 'user.json'}) async {
-  final prefs = JsonStore();
   Directory appDocDir = await getApplicationDocumentsDirectory();
   String path = appDocDir.path;
   var jsonFile = new File(path + "/" + fileName);

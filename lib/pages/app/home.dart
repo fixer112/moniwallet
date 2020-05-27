@@ -14,7 +14,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   void initState() {
-    getJson().then((json) => print(json));
+    //getJson().then((json) => print(json));
     super.initState();
   }
 
