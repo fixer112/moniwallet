@@ -196,78 +196,85 @@ class Widgets {
     );
   }
 
-  static drawer(context) {
-    return Consumer<UserModel>(builder: (context, user, child) {
-      return Container(
-        //width: 250,
-        child: GFDrawer(
-          color: whiteColor,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              UserAccountsDrawerHeader(
-                accountName: text(
-                    "${user.getUser.fullname} (${ucFirst(user.getUser.packageName)} Account)",
-                    color: whiteColor),
-                accountEmail: text(user.getUser.email, color: whiteColor),
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage:
-                      NetworkImage('$url/${user.getUser.profilePic}'),
+  /* static scaffold({title, body, user}) {
+    return Scaffold(
+        backgroundColor: Colors.transparent,
+        drawer: drawer(user),
+        appBar: appbar(title),
+        body: body);
+  } */
+
+  static drawer(UserModel user) {
+    //var user = Provider.of<UserModel>(context, listen: false);
+    return Container(
+      //width: 250,
+      child: GFDrawer(
+        color: whiteColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: text(
+                  "${user.getUser.fullname} (${ucFirst(user.getUser.packageName)} Account)",
+                  color: whiteColor),
+              accountEmail: text(user.getUser.email, color: whiteColor),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage:
+                    NetworkImage('$url/${user.getUser.profilePic}'),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                gradient: LinearGradient(
+                  colors: [secondaryColor, primaryColor],
+                  //stops: [0.5, 0.5],
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  gradient: LinearGradient(
-                    colors: [secondaryColor, primaryColor],
-                    //stops: [0.5, 0.5],
-                  ),
-                  /* image: DecorationImage(
+                /* image: DecorationImage(
                     image: AssetImage('assets/img/background (2).jpg')), */
-                ),
               ),
-              listTile(
-                'Home',
-                FontAwesomeIcons.home,
-                action: () => Get.to(Home()),
+            ),
+            listTile(
+              'Home',
+              FontAwesomeIcons.home,
+              action: () => Get.to(Home()),
+            ),
+            listTile(
+              'Transaction History',
+              FontAwesomeIcons.history,
+            ),
+            listTile(
+              'Fund Wallet',
+              FontAwesomeIcons.creditCard,
+            ),
+            listTile(
+              'Airtime',
+              FontAwesomeIcons.phoneAlt,
+            ),
+            listTile(
+              'Data',
+              FontAwesomeIcons.globe,
+            ),
+            listTile(
+              'Cable',
+              FontAwesomeIcons.tv,
+            ),
+            Expanded(child: Container()),
+            Container(
+              color: secondaryColor,
+              child: listTile(
+                'Logout',
+                FontAwesomeIcons.powerOff,
+                action: () async {
+                  await removeJson();
+                  Get.to(Login());
+                },
+                color: Colors.red,
               ),
-              listTile(
-                'Transaction History',
-                FontAwesomeIcons.history,
-              ),
-              listTile(
-                'Fund Wallet',
-                FontAwesomeIcons.creditCard,
-              ),
-              listTile(
-                'Airtime',
-                FontAwesomeIcons.phoneAlt,
-              ),
-              listTile(
-                'Data',
-                FontAwesomeIcons.globe,
-              ),
-              listTile(
-                'Cable',
-                FontAwesomeIcons.tv,
-              ),
-              Expanded(child: Container()),
-              Container(
-                color: secondaryColor,
-                child: listTile(
-                  'Logout',
-                  FontAwesomeIcons.powerOff,
-                  action: () async {
-                    await removeJson();
-                    Get.to(Login());
-                  },
-                  color: Colors.red,
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
-      );
-    });
+      ),
+    );
 
     /*return Drawer(
       child: ListView(

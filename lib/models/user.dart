@@ -79,7 +79,7 @@ class User {
       createdAt: DateTime.parse(data['created_at']) ?? null,
       balance: double.parse(data['balance']),
       referralBalance: double.parse(data['referral_balance']),
-      packageName: data['package_name'],
+      packageName: data['package_name'] ?? '',
     );
   }
 
@@ -103,6 +103,7 @@ class User {
         'created_at': createdAt.toIso8601String(),
         'balance': balance.toString(),
         'referral_balance': referralBalance.toString(),
+        'packege_name': packageName,
       };
 
   /* List<Transaction> setTransactions(List<Transaction> transactions) {

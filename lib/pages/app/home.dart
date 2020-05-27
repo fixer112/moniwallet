@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:moniwallet/global.dart';
 import 'package:moniwallet/providers/user.dart';
 import 'package:moniwallet/value.dart';
+import 'package:moniwallet/widgets/drawer.dart';
 import 'package:moniwallet/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +25,7 @@ class _HomeState extends State<Home> {
       context,
       Scaffold(
         backgroundColor: Colors.transparent,
-        drawer: Widgets.drawer(context),
+        drawer: DrawerWidget(),
         appBar: Widgets.appbar('MoniWallet'),
         body: Consumer<UserModel>(builder: (context, user, child) {
           return ListView(
