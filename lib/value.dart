@@ -13,7 +13,7 @@ Map<int, Color> colorCodes = {
   900: Color.fromRGBO(147, 205, 72, 1),
 };
 
-MaterialColor primarySwatch = Colors.lightBlue;//MaterialColor(0xff899FD4, colorCodes);
+MaterialColor primarySwatch = MaterialColor(0xff899FD4, colorCodes);
 const Color primaryColor = Color(0xff899FD4);
 const Color secondaryColor = Color(0xff1de9b6);
 const Color whiteColor = Colors.white;

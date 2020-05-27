@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.mavenProTextTheme(
             Theme.of(context).textTheme,
           ),
-          //primarySwatch: primarySwatch,
+          primarySwatch: primarySwatch,
           ),
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,

@@ -22,6 +22,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     //var user = Provider.of<UserModel>(context, listen: false);
     return Consumer<UserModel>(builder: (context, user, child) {
     var u = user.getUser;
+    //print(u.packageName);
     return Container(
             //width: 250,
             child: Drawer(
