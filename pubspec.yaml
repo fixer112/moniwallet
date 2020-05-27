@@ -38,9 +38,14 @@ dependencies:
   random_string: ^2.0.1
   #quick_actions: ^0.4.0+2
   firebase_remote_config: ^0.3.0+3
-  get: ^1.17.3
+  get: ^2.6.0
   google_fonts: ^0.2.0
   getflutter: ^1.0.11
+  url_launcher: ^5.4.10
+  package_info: ^0.4.0+18
+  shared_preferences: ^0.5.7+3
+  json_store: ^1.0.3
+  path_provider: any
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +65,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
       - assets/img/logo.png
+      - assets/img/logo2.png
       - assets/img/background (1).jpg
       - assets/img/background (2).jpg
       - assets/img/background (3).jpg

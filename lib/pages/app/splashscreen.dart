@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:moniwallet/pages/app/home.dart';
 import 'package:moniwallet/pages/auth/login.dart';
+import 'package:moniwallet/widgets/widgets.dart';
+import 'package:package_info/package_info.dart';
 
 import '../../value.dart';
 
@@ -10,43 +13,48 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
+  PackageInfo _packageInfo = new PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 3), (){
-      Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) => Home(),
-      ));
+    _initPackageInfo();
+    Future.delayed(Duration(seconds: 3), () {
+      Get.to(Login());
     });
 
     super.initState();
+  }
+
+  Future<Null> _initPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
-      body: Card(
-        color: primaryColor,
-        elevation: 8,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Center(
-                child: SizedBox(
-                  width: 160,
-                  height: 100,
-                  child: FittedBox(
-                    child: Image.asset( 'assets/img/logo.png' ),
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Center(
+              child: Hero(
+                child: Image.asset('assets/img/logo2.png'),
+                tag: 'logo2',
               ),
             ),
-            Text( 'Version: 1.0.0', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold), ),
-            SizedBox(height: 30,),
-          ],
-        ),
+          ),
+          Widgets.text("Version ${_packageInfo.version}"),
+          /* SizedBox(
+            height: 30,
+          ), */
+        ],
       ),
     );
   }
