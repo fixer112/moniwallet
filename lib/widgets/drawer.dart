@@ -21,77 +21,78 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   Widget build(BuildContext context) {
     //var user = Provider.of<UserModel>(context, listen: false);
     return Consumer<UserModel>(builder: (context, user, child) {
-    var u = user.getUser;
-    //print(u.packageName);
-    return Container(
-            //width: 250,
-            child: Drawer(
-              //color: whiteColor,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  UserAccountsDrawerHeader(
-                    accountName: Widgets.text(
-                        "${u.fullname} (${ucFirst(u.packageName)} Account)",
-                        color: whiteColor),
-                    accountEmail:
-                        Widgets.text(user.getUser.email, color: whiteColor),
-                    currentAccountPicture: CircleAvatar(
-                      backgroundImage: NetworkImage('$url/${u.profilePic}'),
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      gradient: LinearGradient(
-                        colors: [secondaryColor, primaryColor],
-                        //stops: [0.5, 0.5],
-                      ),
-                      /* image: DecorationImage(
+      var u = user.getUser;
+      //print(u.packageName);
+      return Container(
+        //width: 250,
+        child: Drawer(
+          //color: whiteColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                accountName: Widgets.text(
+                    "${u.fullname} (${ucFirst(u.packageName)} Account)",
+                    color: whiteColor),
+                accountEmail:
+                    Widgets.text(user.getUser.email, color: whiteColor),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: NetworkImage('$url/${u.profilePic}'),
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  gradient: LinearGradient(
+                    colors: [secondaryColor, primaryColor],
+                    //stops: [0.5, 0.5],
+                  ),
+                  /* image: DecorationImage(
                     image: AssetImage('assets/img/background (2).jpg')), */
-                    ),
-                  ),
-                  Widgets.listTile(
-                    'Home',
-                    FontAwesomeIcons.home,
-                    action: () => Get.to(Home()),
-                  ),
-                  Widgets.listTile(
-                    'Transaction History',
-                    FontAwesomeIcons.history,
-                  ),
-                  Widgets.listTile(
-                    'Fund Wallet',
-                    FontAwesomeIcons.creditCard,
-                  ),
-                  Widgets.listTile(
-                    'Airtime',
-                    FontAwesomeIcons.phoneAlt,
-                  ),
-                  Widgets.listTile(
-                    'Data',
-                    FontAwesomeIcons.globe,
-                  ),
-                  Widgets.listTile(
-                    'Cable',
-                    FontAwesomeIcons.tv,
-                  ),
-                  Expanded(child: Container()),
-                  Container(
-                    color: secondaryColor,
-                    child: Widgets.listTile(
-                      'Logout',
-                      FontAwesomeIcons.powerOff,
-                      action: () async {
-                        await removeJson();
-                        Get.to(Login());
-                      },
-                      color: Colors.red,
-                    ),
-                  )
-                ],
+                ),
               ),
-            ),
-          );
+              Widgets.listTile(
+                'Home',
+                FontAwesomeIcons.home,
+                action: () => Get.to(Home()),
+              ),
+              Widgets.listTile(
+                'Transaction History',
+                FontAwesomeIcons.history,
+              ),
+              Widgets.listTile(
+                'Fund Wallet',
+                FontAwesomeIcons.creditCard,
+              ),
+              Widgets.listTile(
+                'Airtime',
+                FontAwesomeIcons.phoneAlt,
+              ),
+              Widgets.listTile(
+                'Data',
+                FontAwesomeIcons.globe,
+              ),
+              Widgets.listTile(
+                'Cable',
+                FontAwesomeIcons.tv,
+              ),
+              Expanded(child: Container()),
+              Container(
+                color: secondaryColor,
+                child: Widgets.listTile(
+                  'Logout',
+                  FontAwesomeIcons.powerOff,
+                  action: () async {
+                    await removeJson();
+                    await removeJson(fileName: 'credentials.json');
+                    Get.to(Login());
+                  },
+                  color: Colors.red,
+                ),
+              )
+            ],
+          ),
+        ),
+      );
     });
   }
 }

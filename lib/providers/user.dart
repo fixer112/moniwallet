@@ -38,7 +38,8 @@ class UserModel extends ChangeNotifier {
 
   bool get isloading => _isLoading;
 
-  Future login(String username, String password, context) async {
+  Future login(String username, String password, context,
+      {isRefresh: false}) async {
     var user = Provider.of<UserModel>(context, listen: false);
 
     try {
@@ -60,13 +61,17 @@ class UserModel extends ChangeNotifier {
           var u = User.fromMap(body);
           setUser(u);
           await saveJson(jsonEncode(u));
+          await saveJson(
+              jsonEncode({'username': username, 'password': password}),
+              fileName: 'credentials.json');
           //await saveJson('credentials', {'username': username});
         }
         //user.user.settings = body['settings'];
         //await user.user.getTransactions(context);
         //await user.user.getComissions(context);
-        Get.off(Home());
+        if (!isRefresh) Get.off(Home());
       });
+      return;
     } catch (e) {
       user.setLoading(false);
       print(e);

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:moniwallet/global.dart';
@@ -13,9 +16,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var credentials;
   @override
   void initState() {
-    //getJson().then((json) => print(json));
+    getJson(fileName: 'credentials.json').then((j) {
+      //return print();
+      setState(() {
+        credentials = json.decode(j);
+      });
+    });
     super.initState();
   }
 
@@ -28,27 +37,37 @@ class _HomeState extends State<Home> {
         drawer: DrawerWidget(),
         appBar: Widgets.appbar('MoniWallet'),
         body: Consumer<UserModel>(builder: (context, user, child) {
-          return ListView(
-            padding: EdgeInsets.all(20),
-            children: <Widget>[
-              Container(
-                height: 110,
-                child: customContainer(currencyFormat(user.getUser.balance),
-                    'My Wallet', FontAwesomeIcons.wallet,
-                    color: secondaryColor),
-              ),
-              SizedBox(height: 15),
-              Container(
-                height: 110,
-                child: customContainer(
-                    currencyFormat(user.getUser.referralBalance),
-                    'Refferal Wallet',
-                    FontAwesomeIcons.user),
-              ),
-            ],
+          return RefreshIndicator(
+            onRefresh: () => user.login(
+                credentials['username'], credentials['password'], context,
+                isRefresh: true),
+            child: Stack(children: [
+              body(user),
+              Widgets.loader(user),
+            ]),
           );
         }),
       ),
+    );
+  }
+
+  body(UserModel user) {
+    return ListView(
+      padding: EdgeInsets.all(20),
+      children: <Widget>[
+        Container(
+          height: 110,
+          child: customContainer(currencyFormat(user.getUser.balance),
+              'My Wallet', FontAwesomeIcons.wallet,
+              color: secondaryColor),
+        ),
+        SizedBox(height: 15),
+        Container(
+          height: 110,
+          child: customContainer(currencyFormat(user.getUser.referralBalance),
+              'Refferal Wallet', FontAwesomeIcons.user),
+        ),
+      ],
     );
   }
 
