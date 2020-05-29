@@ -21,6 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   );
   @override
   void initState() {
+    print(url);
     _initPackageInfo();
     Future.delayed(Duration(seconds: 3), () {
       Get.to(Login());
@@ -38,24 +39,26 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: whiteColor,
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: Hero(
-                child: Image.asset('assets/img/logo2.png'),
-                tag: 'logo2',
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          backgroundColor: whiteColor,
+          body: Column(
+            children: <Widget>[
+              Expanded(
+                child: Center(
+                  child: Hero(
+                    child: Image.asset('assets/img/logo2.png'),
+                    tag: 'logo2',
+                  ),
+                ),
               ),
-            ),
-          ),
-          Widgets.text("Version ${_packageInfo.version}"),
-          /* SizedBox(
+              Widgets.text("Version ${_packageInfo.version}"),
+              /* SizedBox(
             height: 30,
           ), */
-        ],
-      ),
-    );
+            ],
+          ),
+        ));
   }
 }

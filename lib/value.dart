@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 Map<int, Color> colorCodes = {
@@ -17,5 +18,6 @@ MaterialColor primarySwatch = MaterialColor(0xff899FD4, colorCodes);
 const Color primaryColor = Color(0xff899FD4);
 const Color secondaryColor = Color(0xff1de9b6);
 const Color whiteColor = Colors.white;
-const String url = 'https://bill.altechtic.com';
+const String url =
+    kDebugMode ? 'https://bill.altechtic.com' : 'https://moniwallet.com';
 const connErrorMsg = 'Connection Failed';

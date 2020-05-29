@@ -25,18 +25,29 @@ class _LoginState extends State<Login> {
   //var savedUser;
 
   @override
+  void dispose() {
+    username.dispose();
+    password.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     var user = Provider.of<UserModel>(context, listen: false);
+    user.setLoading(true);
     getJson().then((u) {
       if (u != null) {
         //u['latest_transactions'] =
         user.setUser(User.fromMap(json.decode(u)));
+        //refreshLogin(context, refresh: false);
 
         if (user.getUser != null) Get.to(Home());
+        user.setLoading(false);
 
         //setState(() {});
         //print(json.decode(u)['id']);
       }
+      user.setLoading(false);
       //print(user.getUser);
     });
 
@@ -49,26 +60,28 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //backgroundColor: whiteColor,
-      body: Container(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(20),
-          physics: BouncingScrollPhysics(),
-          child: Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height,
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          //backgroundColor: whiteColor,
+          body: Container(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(20),
+              physics: BouncingScrollPhysics(),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height,
+                ),
+                child: Consumer<UserModel>(builder: (context, user, child) {
+                  return Stack(children: [
+                    listLogin(user),
+                    Widgets.loader(user),
+                  ]);
+                }),
+              ),
             ),
-            child: Consumer<UserModel>(builder: (context, user, child) {
-              return Stack(children: [
-                listLogin(user),
-                Widgets.loader(user),
-              ]);
-            }),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   listLogin(UserModel user) {
@@ -110,22 +123,12 @@ class _LoginState extends State<Login> {
           height: 10,
         ),
         Widgets.button('LOGIN', context, () {
-          /* Widgets.waiting(context,
-                      task: () async {
-                        await Future.delayed(Duration(seconds: 3), () async {
-                          return true;
-                        });
-                      },
-                      whenComplete: () async => Get.to(Home())); */
           if (!user.isloading) {
             if ([username.text, password.text].contains('')) {
               return Widgets.snackbar(msg: 'All inputs are required');
             }
             user.login(username.text, password.text, context);
-            //Get.to(Home());
           }
-          //user.setLoading(true);
-          closeKeybord(context);
         }),
         SizedBox(
           height: 10,

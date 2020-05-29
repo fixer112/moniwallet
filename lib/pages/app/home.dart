@@ -16,39 +16,42 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var credentials;
+  //var credentials;
   @override
   void initState() {
-    getJson(fileName: 'credentials.json').then((j) {
-      //return print();
-      setState(() {
-        credentials = json.decode(j);
-      });
-    });
+    var user = Provider.of<UserModel>(context, listen: false);
+
+    if (user.getUser.settings['general_alert'] != "" && generalAlert) {
+      Timer.run(
+          () => Widgets.alert(user.getUser.settings['general_alert'], context));
+    }
+    generalAlert = false;
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Widgets.coloredPage(
-      context,
-      Scaffold(
-        backgroundColor: Colors.transparent,
-        drawer: DrawerWidget(),
-        appBar: Widgets.appbar('MoniWallet'),
-        body: Consumer<UserModel>(builder: (context, user, child) {
-          return RefreshIndicator(
-            onRefresh: () => user.login(
-                credentials['username'], credentials['password'], context,
-                isRefresh: true),
-            child: Stack(children: [
-              body(user),
-              Widgets.loader(user),
-            ]),
-          );
-        }),
-      ),
-    );
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: Widgets.coloredPage(
+          context,
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            drawer: DrawerWidget(),
+            appBar: Widgets.appbar('MoniWallet',
+                backgroundColor: Colors.transparent),
+            body: Consumer<UserModel>(builder: (context, user, child) {
+              return RefreshIndicator(
+                onRefresh: () => refreshLogin(context),
+                child: Stack(children: [
+                  body(user),
+                  Widgets.loader(user),
+                ]),
+              );
+            }),
+          ),
+        ));
   }
 
   body(UserModel user) {

@@ -46,7 +46,7 @@ class UserModel extends ChangeNotifier {
       user.setLoading(true);
       //print('loading');
       var link = '$url/api/login';
-      link = isRefresh ? "$link?refresh=yes" : link;
+      link = isRefresh ? "$link?type=app&refresh=yes" : link;
       final response = await http.post(link, body: {
         'username': username,
         'password': password,
@@ -58,6 +58,11 @@ class UserModel extends ChangeNotifier {
           ? json.decode(response.body)['data']
           : json.decode(response.body);
 
+      if ((response.statusCode < 200 || response.statusCode >= 300) &&
+          isRefresh) {
+        Widgets.snackbar(msg: 'Please re login');
+        return logout();
+      }
       request(response, () async {
         if (body != null) {
           var u = User.fromMap(body);
@@ -66,12 +71,9 @@ class UserModel extends ChangeNotifier {
           await saveJson(
               jsonEncode({'username': username, 'password': password}),
               fileName: 'credentials.json');
-          //await saveJson('credentials', {'username': username});
         }
-        //user.user.settings = body['settings'];
-        //await user.user.getTransactions(context);
-        //await user.user.getComissions(context);
-        if (!isRefresh) Get.off(Home());
+
+        if (!isRefresh) Get.to(Home());
       });
       return;
     } catch (e) {

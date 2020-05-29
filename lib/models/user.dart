@@ -26,6 +26,8 @@ class User {
   final String apiToken;
   final String type;
   final String profilePic;
+  final String bankName;
+  final String accountNumber;
   final DateTime createdAt;
   List<Transaction> latestTransactions;
   List<Comission> latestComissions;
@@ -53,6 +55,8 @@ class User {
     this.balance,
     this.referralBalance,
     this.packageName,
+    this.accountNumber,
+    this.bankName,
   });
 
   factory User.fromMap(Map data) {
@@ -79,7 +83,9 @@ class User {
       createdAt: DateTime.parse(data['created_at']) ?? null,
       balance: double.parse(data['balance']),
       referralBalance: double.parse(data['referral_balance']),
-      packageName: data['package_name'] ,
+      packageName: data['package_name'],
+      bankName: data['bank_name'] ?? '',
+      accountNumber: data['account_number'] ?? '',
     );
   }
 
@@ -104,6 +110,8 @@ class User {
         'balance': balance.toString(),
         'referral_balance': referralBalance.toString(),
         'package_name': packageName,
+        'bank_name': bankName,
+        'account_number': accountNumber,
       };
 
   /* List<Transaction> setTransactions(List<Transaction> transactions) {
@@ -111,7 +119,7 @@ class User {
       transactions = [...this.transactions, ...transactions].toSet().toList();
     }
     transactions.sort((a, b) {
-      return b.createdAt.compareTo(a.createdAt);
+      return b.createdAt.compareto(a.createdAt);
     });
 
     return transactions;
@@ -122,7 +130,7 @@ class User {
       comissions = [...this.comissions, ...comissions].toSet().toList();
     }
     comissions.sort((a, b) {
-      return b.createdAt.compareTo(a.createdAt);
+      return b.createdAt.compareto(a.createdAt);
     });
 
     return comissions;

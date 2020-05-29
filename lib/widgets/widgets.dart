@@ -12,14 +12,15 @@ import 'package:moniwallet/value.dart';
 import 'package:provider/provider.dart';
 
 class Widgets {
-  static appbar(title) {
+  static appbar(String title,
+      {Color color = whiteColor, Color backgroundColor = primaryColor}) {
     return AppBar(
-        iconTheme: new IconThemeData(color: whiteColor),
+        iconTheme: new IconThemeData(color: color),
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: backgroundColor,
         title: text(
           title,
-          color: whiteColor,
+          color: color,
         ));
   }
 
@@ -40,7 +41,8 @@ class Widgets {
       TextInputType type = TextInputType.text,
       bool spaced = true,
       IconData icondata,
-      String prefix = ''}) {
+      String prefix = '',
+      bool enable = true}) {
     var user = Provider.of<UserModel>(context, listen: false);
     Icon icon = icondata != null
         ? Icon(
@@ -67,7 +69,7 @@ class Widgets {
         controller: controller,
         keyboardType: type,
         obscureText: type == TextInputType.visiblePassword ? true : false,
-        enabled: !user.isloading,
+        enabled: !user.isloading && enable,
       ),
     );
   }
@@ -75,7 +77,8 @@ class Widgets {
   static button(String text, BuildContext context, Function action,
       {bool spaced = true,
       Color color = primaryColor,
-      Color textColor = whiteColor}) {
+      Color textColor = whiteColor,
+      bool enable = true}) {
     var user = Provider.of<UserModel>(context, listen: false);
     return Container(
       height: 54,
@@ -88,7 +91,12 @@ class Widgets {
           text,
           style: TextStyle(color: textColor),
         ),
-        onPressed: !user.isloading ? action : null,
+        onPressed: user.isloading || !enable
+            ? null
+            : () {
+                action();
+                closeKeybord(context);
+              },
       ),
     );
   }
@@ -375,6 +383,68 @@ class Widgets {
           )
         : Container();
   }
+
+  static DropdownMenuItem dropItem(String text, dynamic value) {
+    return DropdownMenuItem(
+      child: Row(
+        children: <Widget>[
+          Text(text),
+        ],
+      ),
+      value: value,
+    );
+  }
+
+  static transactionAlert(String desc, BuildContext context) {
+    Widget cancelButton = FlatButton(
+      child: Text("Stay Here"),
+      onPressed: () {
+        Get.back();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Go Home"),
+      onPressed: () {
+        Get.to(Home());
+      },
+    );
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Transaction Successfull"),
+          content: Text(desc),
+          actions: [
+            cancelButton,
+            continueButton,
+          ],
+        );
+        ;
+      },
+    );
+  }
+
+  static alert(String desc, BuildContext context, {title = "Alert"}) {
+    Widget cancelButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Get.back();
+      },
+    );
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(desc),
+          actions: [
+            cancelButton,
+          ],
+        );
+        ;
+      },
+    );
+  }
 }
 
 class Logo extends StatefulWidget {
@@ -425,7 +495,7 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(100)),
         child: Container(
-          //color: primaryColor,
+          color: whiteColor,
           child: Image.asset(
             "assets/img/logo.png",
             height: 50,
