@@ -17,6 +17,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //var credentials;
+
+  int currentIndex = 0;
+
   @override
   void initState() {
     var user = Provider.of<UserModel>(context, listen: false);
@@ -70,6 +73,50 @@ class _HomeState extends State<Home> {
           child: customContainer(currencyFormat(user.getUser.referralBalance),
               'Refferal Wallet', FontAwesomeIcons.user),
         ),
+        SizedBox(height: 15),
+
+        Widgets.tabbedWidget([
+          {
+            'title': 'Wallet History',
+            'icon': FontAwesomeIcons.wallet,
+            'widget': Column(
+              children: <Widget>[
+                Widgets.paymentCard({
+                  'desc': 'Wallet funding of 200 from online payment',
+                  'amount': 333,
+                  'date': 'September 10th, 10:18 AM',
+                  'type': 'credit',
+                }, (){}),
+
+                Widgets.paymentCard({
+                  'desc': 'Recharge of MTN ₦100.00 to 08106813749',
+                  'amount': 250,
+                  'date': 'September 10th, 10:18 AM',
+                  'type': 'debit',
+                }, (){}),
+              ],
+            ),
+          },
+
+          {
+            'title': 'Refferal History',
+            'icon': FontAwesomeIcons.user,
+            'widget': Column(
+              children: <Widget>[
+                Widgets.paymentCard({
+                  'desc': 'Recharge of MTN ₦100.00 to 08106813749',
+                  'amount': 200,
+                  'date': 'September 10th, 10:18 AM',
+                  'type': 'debit',
+                }, (){}),
+              ],
+            ),
+          }
+        ], currentIndex: currentIndex, controller: ( index ){
+          setState(() {
+            currentIndex = index;
+          });
+        }),
       ],
     );
   }
