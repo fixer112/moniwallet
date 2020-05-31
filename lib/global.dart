@@ -17,6 +17,7 @@ import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
+import 'package:app_review/app_review.dart';
 
 bool generalAlert = true;
 bool airtimeAlert = true;
@@ -73,6 +74,7 @@ Future transaction(
     request(response, () async {
       if (body.containsKey('desc')) {
         refreshLogin(context);
+        await appReview();
         return Widgets.transactionAlert(body['desc'], context);
       }
     });
@@ -233,4 +235,21 @@ checkOut(
       //snackbar(connErrorMsg, context, _scaffoldKey);
     }
   }
+}
+
+appReview({minCount = 2}) async {
+  getJson(fileName: 'actions.json').then((j) async {
+    var count = 1;
+    if (j != null) {
+      count = json.decode(j)['count'];
+    }
+    print(count);
+    await saveJson(json.encode({'count': int.parse(count.toString()) + 1}),
+        fileName: 'actions.json');
+    if (count == minCount || (count % 10 == 0 && count < 21)) {
+      await AppReview.storeListing;
+    }
+  });
+
+  //}
 }

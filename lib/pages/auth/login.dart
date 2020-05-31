@@ -122,7 +122,8 @@ class _LoginState extends State<Login> {
         SizedBox(
           height: 10,
         ),
-        Widgets.button('LOGIN', context, () {
+        Widgets.button('LOGIN', context, () async {
+          //return appReview();
           if (!user.isloading) {
             if ([username.text, password.text].contains('')) {
               return Widgets.snackbar(msg: 'All inputs are required');
