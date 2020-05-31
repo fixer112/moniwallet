@@ -80,7 +80,8 @@ class UserModel extends ChangeNotifier {
       user.setLoading(false);
       print(e);
       //snackbar(e.message(), context, _scaffoldKey);
-      return Widgets.snackbar(msg: connErrorMsg);
+
+      if (!isRefresh) Widgets.snackbar(msg: connErrorMsg);
       //return snackbar(connErrorMsg, context, _scaffoldKey);
     }
   }

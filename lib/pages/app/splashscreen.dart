@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moniwallet/pages/app/home.dart';
 import 'package:moniwallet/pages/auth/login.dart';
+import 'package:moniwallet/pages/bill/airtime.dart';
+import 'package:moniwallet/pages/bill/cable.dart';
+import 'package:moniwallet/pages/bill/data.dart';
 import 'package:moniwallet/widgets/widgets.dart';
 import 'package:package_info/package_info.dart';
+import 'package:quick_actions/quick_actions.dart';
 
 import '../../value.dart';
 
@@ -19,9 +23,30 @@ class _SplashScreenState extends State<SplashScreen> {
     version: 'Unknown',
     buildNumber: 'Unknown',
   );
+  final QuickActions quickActions = QuickActions();
   @override
   void initState() {
     print(url);
+    /* quickActions.initialize((shortcutType) {
+      if (shortcutType == 'airtime') {
+        Get.to(Airtime());
+      }
+      if (shortcutType == 'data') {
+        Get.to(Data());
+      }
+      if (shortcutType == 'cable') {
+        Get.to(Cable());
+      }
+    });
+
+    quickActions.setShortcutItems(<ShortcutItem>[
+      const ShortcutItem(
+          type: 'cable', localizedTitle: 'Cable', icon: 'personal_video'),
+      const ShortcutItem(
+          type: 'data', localizedTitle: 'Data', icon: 'language'),
+      const ShortcutItem(
+          type: 'airtime', localizedTitle: 'Airtime', icon: 'phone'),
+    ]); */
     _initPackageInfo();
     Future.delayed(Duration(seconds: 3), () {
       Get.to(Login());

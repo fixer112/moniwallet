@@ -27,6 +27,8 @@ class _HomeState extends State<Home> {
     }
     generalAlert = false;
 
+    Timer.run(() => refreshLogin(context));
+
     super.initState();
   }
 
