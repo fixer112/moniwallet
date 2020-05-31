@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,7 +15,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  //var credentials;
+  int currentIndex = 0;
+
   @override
   void initState() {
     var user = Provider.of<UserModel>(context, listen: false);
@@ -57,22 +57,74 @@ class _HomeState extends State<Home> {
   }
 
   body(UserModel user) {
-    return ListView(
-      padding: EdgeInsets.all(20),
-      children: <Widget>[
-        Container(
-          height: 110,
-          child: customContainer(currencyFormat(user.getUser.balance),
-              'My Wallet', FontAwesomeIcons.wallet,
-              color: secondaryColor),
-        ),
-        SizedBox(height: 15),
-        Container(
-          height: 110,
-          child: customContainer(currencyFormat(user.getUser.referralBalance),
-              'Refferal Wallet', FontAwesomeIcons.user),
-        ),
-      ],
+    Widget latestTran = ListView(
+        shrinkWrap: true,
+        children: user.getUser.latestTransactions
+            .map<Widget>(
+              (transaction) => Widgets.paymentCard({
+                'desc': transaction.desc,
+                'amount': transaction.amount,
+                'date': transaction.createdAt.toLocal().toString(),
+                'type': transaction.type,
+              }, () {}),
+            )
+            .toList());
+    Widget latestCom = ListView(
+        shrinkWrap: true,
+        children: user.getUser.latestComissions
+            .map<Widget>(
+              (transaction) => Widgets.paymentCard({
+                'desc': transaction.desc,
+                'amount': transaction.amount,
+                'date': transaction.createdAt.toString(),
+                'type': 'credit',
+              }, () {}),
+            )
+            .toList());
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        //padding: EdgeInsets.all(20),
+        children: <Widget>[
+          Container(
+            //height: 110,
+            child: customContainer(currencyFormat(user.getUser.balance),
+                'My Wallet', FontAwesomeIcons.wallet,
+                color: secondaryColor),
+          ),
+          SizedBox(height: 15),
+          Container(
+            //height: 110,
+            child: customContainer(currencyFormat(user.getUser.referralBalance),
+                'Refferal Wallet', FontAwesomeIcons.user),
+          ),
+          SizedBox(height: 15),
+          Widgets.tabbedWidget([
+            {
+              'title': 'Wallet History',
+              'icon': FontAwesomeIcons.wallet,
+              'widget': Container(
+                height: 300,
+                child: checkNull(user.getUser.latestTransactions, latestTran,
+                    msg: 'No transaction history available'),
+              ),
+            },
+            {
+              'title': 'Refferal History',
+              'icon': FontAwesomeIcons.user,
+              'widget': Container(
+                height: 300,
+                child: checkNull(user.getUser.latestComissions, latestCom,
+                    msg: "No referral history available"),
+              ),
+            }
+          ], currentIndex: currentIndex, controller: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          }),
+        ],
+      ),
     );
   }
 

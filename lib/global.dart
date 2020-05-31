@@ -176,3 +176,9 @@ refreshLogin(BuildContext context, {bool refresh = true}) async {
   user.login(credentials['username'], credentials['password'], context,
       isRefresh: refresh);
 }
+
+Widget checkNull(dynamic check, Widget widget, {String msg = ''}) {
+  return check == null || check.isEmpty
+      ? Center(child: Widgets.text(msg))
+      : widget;
+}
