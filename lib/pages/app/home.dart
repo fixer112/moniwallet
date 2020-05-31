@@ -27,8 +27,6 @@ class _HomeState extends State<Home> {
     }
     generalAlert = false;
 
-    Timer.run(() => refreshLogin(context));
-
     super.initState();
   }
 
@@ -58,7 +56,7 @@ class _HomeState extends State<Home> {
 
   body(UserModel user) {
     Widget latestTran = ListView(
-        shrinkWrap: true,
+        //shrinkWrap: true,
         children: user.getUser.latestTransactions
             .map<Widget>(
               (transaction) => Widgets.paymentCard({
@@ -70,7 +68,7 @@ class _HomeState extends State<Home> {
             )
             .toList());
     Widget latestCom = ListView(
-        shrinkWrap: true,
+        //shrinkWrap: true,
         children: user.getUser.latestComissions
             .map<Widget>(
               (transaction) => Widgets.paymentCard({
@@ -83,8 +81,9 @@ class _HomeState extends State<Home> {
             .toList());
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Column(
+      child: ListView(
         //padding: EdgeInsets.all(20),
+        shrinkWrap: true,
         children: <Widget>[
           Container(
             //height: 110,
