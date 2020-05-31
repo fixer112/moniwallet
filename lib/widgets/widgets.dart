@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:moniwallet/global.dart';
-import 'package:moniwallet/models/user.dart';
 import 'package:moniwallet/pages/app/home.dart';
 import 'package:moniwallet/pages/auth/login.dart';
 import 'package:moniwallet/providers/user.dart';
@@ -431,7 +430,6 @@ class Widgets {
             continueButton,
           ],
         );
-        ;
       },
     );
   }

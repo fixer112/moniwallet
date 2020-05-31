@@ -10,7 +10,6 @@ import 'package:moniwallet/pages/app/home.dart';
 import 'package:moniwallet/value.dart';
 import 'package:moniwallet/widgets/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserModel extends ChangeNotifier {
   User user;
