@@ -4,11 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:getflutter/components/drawer/gf_drawer.dart';
 import 'package:moniwallet/global.dart';
 import 'package:moniwallet/pages/app/fund.dart';
 import 'package:moniwallet/pages/app/home.dart';
-import 'package:moniwallet/pages/auth/login.dart';
 import 'package:moniwallet/pages/bill/airtime.dart';
 import 'package:moniwallet/pages/bill/cable.dart';
 import 'package:moniwallet/pages/bill/data.dart';
@@ -59,7 +57,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       gradient: LinearGradient(
-                        colors: [secondaryColor, primaryColor],
+                        colors: [primaryColor, secondaryColor],
                         //stops: [0.5, 0.5],
                       ),
                       /* image: DecorationImage(
@@ -91,7 +89,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   ),
                   Expanded(child: Container()),
                   Container(
-                    color: secondaryColor,
+                    color: primaryColor,
                     child: Widgets.listTile(
                       'Logout',
                       FontAwesomeIcons.powerOff,
