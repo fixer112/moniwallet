@@ -73,10 +73,10 @@ class _LoginState extends State<Login> {
                   maxHeight: MediaQuery.of(context).size.height,
                 ),
                 child: Consumer<UserModel>(builder: (context, user, child) {
-                  return Stack(children: [
+                  return Widgets.body(
+                    user,
                     listLogin(user),
-                    Widgets.loader(user),
-                  ]);
+                  );
                 }),
               ),
             ),

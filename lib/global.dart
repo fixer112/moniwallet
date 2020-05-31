@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +13,7 @@ import 'package:moniwallet/value.dart';
 import 'package:moniwallet/widgets/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -71,7 +73,7 @@ Future transaction(
     request(response, () async {
       if (body.containsKey('desc')) {
         refreshLogin(context);
-        Widgets.transactionAlert(body['desc'], context);
+        return Widgets.transactionAlert(body['desc'], context);
       }
     });
     return;
@@ -181,4 +183,54 @@ Widget checkNull(dynamic check, Widget widget, {String msg = ''}) {
   return check == null || check.isEmpty
       ? Center(child: Widgets.text(msg))
       : widget;
+}
+
+String _getReference(id) {
+  return '${randomAlphaNumeric(7)}$id${randomAlphaNumeric(7)}';
+}
+
+checkOut(
+  BuildContext context, {
+  @required UserModel user,
+  @required int amount,
+}) async {
+  var charges = 1.5 / 100;
+  var chargeAmount = (amount / (1 - charges)).ceil() * 100;
+  Charge charge = Charge()
+    ..amount = chargeAmount
+    ..reference = _getReference(user.user.id)
+    ..putMetaData('user_id', user.user.id)
+    ..putMetaData('reason', 'top-up')
+    ..putMetaData('amount', amount)
+    ..email = user.user.email;
+
+  CheckoutResponse res = await PaystackPlugin.checkout(
+    context,
+    method: CheckoutMethod.card, // Defaults to CheckoutMethod.selectable
+    charge: charge,
+  );
+  print(res.toString());
+  if (res.message != 'Transaction terminated') {
+    try {
+      user.setLoading(true);
+      final response =
+          await http.get('$url/verify/wallet/fund/${res.reference}', headers: {
+        'Accept': 'application/json',
+      });
+      user.setLoading(false);
+      var body = json.decode(response.body);
+      if (body.containsKey('success')) {
+        refreshLogin(context);
+        return Widgets.transactionAlert(body['success'], context);
+      }
+      request(response, () async {
+        return;
+      });
+    } catch (e) {
+      print(e);
+      user.setLoading(false);
+      Widgets.snackbar(msg: connErrorMsg);
+      //snackbar(connErrorMsg, context, _scaffoldKey);
+    }
+  }
 }

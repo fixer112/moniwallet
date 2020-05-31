@@ -27,6 +27,8 @@ class _HomeState extends State<Home> {
     }
     generalAlert = false;
 
+    Timer.run(() => refreshLogin(context));
+
     super.initState();
   }
 
@@ -44,10 +46,10 @@ class _HomeState extends State<Home> {
             body: Consumer<UserModel>(builder: (context, user, child) {
               return RefreshIndicator(
                 onRefresh: () => refreshLogin(context),
-                child: Stack(children: [
+                child: Widgets.body(
+                  user,
                   body(user),
-                  Widgets.loader(user),
-                ]),
+                ),
               );
             }),
           ),

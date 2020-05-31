@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:moniwallet/global.dart';
+import 'package:moniwallet/models/user.dart';
 import 'package:moniwallet/pages/app/home.dart';
 import 'package:moniwallet/pages/auth/login.dart';
 import 'package:moniwallet/providers/user.dart';
@@ -12,6 +13,13 @@ import 'package:moniwallet/value.dart';
 import 'package:provider/provider.dart';
 
 class Widgets {
+  static body(UserModel user, Widget body) {
+    return Stack(children: [
+      body,
+      Widgets.loader(user),
+    ]);
+  }
+
   static appbar(String title,
       {Color color = whiteColor, Color backgroundColor = primaryColor}) {
     return AppBar(

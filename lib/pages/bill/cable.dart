@@ -133,10 +133,10 @@ class _CableState extends State<Cable> {
           body: Container(
             padding: EdgeInsets.all(20),
             child: Consumer<UserModel>(builder: (context, user, child) {
-              return Stack(children: [
+              return Widgets.body(
+                user,
                 body(user),
-                Widgets.loader(user),
-              ]);
+              );
             }),
           ),
         ));
