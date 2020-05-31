@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -52,7 +53,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     accountEmail:
                         Widgets.text(user.getUser.email, color: whiteColor),
                     currentAccountPicture: CircleAvatar(
-                      backgroundImage: NetworkImage('$url/${u.profilePic}'),
+                      backgroundImage:
+                          CachedNetworkImageProvider('$url/${u.profilePic}'),
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,

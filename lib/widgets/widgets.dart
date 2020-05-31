@@ -27,13 +27,17 @@ class Widgets {
   static text(text,
       {double fontSize = 15,
       fontWeight = FontWeight.bold,
-      Color color = Colors.black, overflow }) {
-    return Text(text,
-        style: TextStyle(
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          color: color,
-        ), overflow: overflow, );
+      Color color = Colors.black,
+      overflow}) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        color: color,
+      ),
+      overflow: overflow,
+    );
   }
 
   static input(TextEditingController controller, BuildContext context,
@@ -441,44 +445,56 @@ class Widgets {
             cancelButton,
           ],
         );
-        ;
       },
     );
   }
-  
-  static tabbedWidget( List tabs, { int currentIndex: 0, Function controller } ){
+
+  static tabbedWidget(List tabs, {int currentIndex: 0, Function controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        SizedBox(height: 100,),
+        SizedBox(
+            //height: 100,
+            ),
         Container(
           height: 60,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: List.generate( tabs.length, (index){
+              children: List.generate(tabs.length, (index) {
                 return InkWell(
-                  onTap: (){
-                    if( controller!=null ) {
-                      controller( index );
+                  onTap: () {
+                    if (controller != null) {
+                      controller(index);
                     }
                   },
-
                   child: Card(
                     child: Container(
+                      // height: 110,
                       decoration: BoxDecoration(
                         border: Border(
-                          top: index==currentIndex ? BorderSide( color: primaryColor, width: 3 ) : BorderSide.none,
+                          top: index == currentIndex
+                              ? BorderSide(color: primaryColor, width: 3)
+                              : BorderSide.none,
                         ),
                       ),
                       padding: EdgeInsets.all(15),
                       child: Row(
                         children: <Widget>[
-                          Icon( tabs[index]['icon'], size: 13, ),
-                          SizedBox( width: 15, ),
-
-                          Widgets.text( tabs[index]['title'], fontSize: 13, color: index==currentIndex ? primaryColor : Colors.black ),
+                          Icon(
+                            tabs[index]['icon'],
+                            size: 13,
+                            color: index == currentIndex ? primaryColor : null,
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Widgets.text(tabs[index]['title'],
+                              fontSize: 13,
+                              color: index == currentIndex
+                                  ? primaryColor
+                                  : Colors.black),
                         ],
                       ),
                     ),
@@ -488,9 +504,9 @@ class Widgets {
             ),
           ),
         ),
-
-        SizedBox( height: 10, ),
-
+        SizedBox(
+          height: 10,
+        ),
         Container(
           child: tabs[currentIndex]['widget'],
         ),
@@ -498,7 +514,7 @@ class Widgets {
     );
   }
 
-  static paymentCard(Map data, Function f){
+  static paymentCard(Map data, Function f) {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.all(10),
@@ -506,13 +522,23 @@ class Widgets {
       child: ListTile(
         contentPadding: EdgeInsets.zero,
         dense: true,
-        leading: Icon( data['type']=='credit' ? FontAwesomeIcons.caretUp : FontAwesomeIcons.caretDown, color: (data['type']=='credit' ? secondaryColor : primaryColor), ),
+        leading: Icon(
+          data['type'] == 'credit'
+              ? FontAwesomeIcons.caretUp
+              : FontAwesomeIcons.caretDown,
+          color: (data['type'] == 'credit' ? secondaryColor : primaryColor),
+        ),
         title: Container(
           margin: EdgeInsets.only(bottom: 10),
-          child: text( data['desc'], fontSize: 15 ),
+          child: text(data['desc'], fontSize: 15),
         ),
-        subtitle: text( data['date'], fontSize: 11, fontWeight: FontWeight.normal ),
-        trailing: text( (data['type']=='debit' ? '-' : '')+currencyFormat(data['amount']), color: (data['type']=='credit' ? secondaryColor : primaryColor), fontSize: 16 ),
+        subtitle:
+            text(data['date'], fontSize: 11, fontWeight: FontWeight.normal),
+        trailing: text(
+            (data['type'] == 'debit' ? '-' : '') +
+                currencyFormat(data['amount']),
+            color: (data['type'] == 'credit' ? secondaryColor : primaryColor),
+            fontSize: 16),
         onTap: f,
       ),
     );

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,8 +15,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  //var credentials;
-
   int currentIndex = 0;
 
   @override
@@ -58,66 +55,74 @@ class _HomeState extends State<Home> {
   }
 
   body(UserModel user) {
-    return ListView(
-      padding: EdgeInsets.all(20),
-      children: <Widget>[
-        Container(
-          height: 110,
-          child: customContainer(currencyFormat(user.getUser.balance),
-              'My Wallet', FontAwesomeIcons.wallet,
-              color: secondaryColor),
-        ),
-        SizedBox(height: 15),
-        Container(
-          height: 110,
-          child: customContainer(currencyFormat(user.getUser.referralBalance),
-              'Refferal Wallet', FontAwesomeIcons.user),
-        ),
-        SizedBox(height: 15),
-
-        Widgets.tabbedWidget([
-          {
-            'title': 'Wallet History',
-            'icon': FontAwesomeIcons.wallet,
-            'widget': Column(
-              children: <Widget>[
-                Widgets.paymentCard({
-                  'desc': 'Wallet funding of 200 from online payment',
-                  'amount': 333,
-                  'date': 'September 10th, 10:18 AM',
-                  'type': 'credit',
-                }, (){}),
-
-                Widgets.paymentCard({
-                  'desc': 'Recharge of MTN ₦100.00 to 08106813749',
-                  'amount': 250,
-                  'date': 'September 10th, 10:18 AM',
-                  'type': 'debit',
-                }, (){}),
-              ],
-            ),
-          },
-
-          {
-            'title': 'Refferal History',
-            'icon': FontAwesomeIcons.user,
-            'widget': Column(
-              children: <Widget>[
-                Widgets.paymentCard({
-                  'desc': 'Recharge of MTN ₦100.00 to 08106813749',
-                  'amount': 200,
-                  'date': 'September 10th, 10:18 AM',
-                  'type': 'debit',
-                }, (){}),
-              ],
-            ),
-          }
-        ], currentIndex: currentIndex, controller: ( index ){
-          setState(() {
-            currentIndex = index;
-          });
-        }),
-      ],
+    Widget latestTran = ListView(
+        shrinkWrap: true,
+        children: user.getUser.latestTransactions
+            .map<Widget>(
+              (transaction) => Widgets.paymentCard({
+                'desc': transaction.desc,
+                'amount': transaction.amount,
+                'date': transaction.createdAt.toLocal().toString(),
+                'type': transaction.type,
+              }, () {}),
+            )
+            .toList());
+    Widget latestCom = ListView(
+        shrinkWrap: true,
+        children: user.getUser.latestComissions
+            .map<Widget>(
+              (transaction) => Widgets.paymentCard({
+                'desc': transaction.desc,
+                'amount': transaction.amount,
+                'date': transaction.createdAt.toString(),
+                'type': 'credit',
+              }, () {}),
+            )
+            .toList());
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        //padding: EdgeInsets.all(20),
+        children: <Widget>[
+          Container(
+            //height: 110,
+            child: customContainer(currencyFormat(user.getUser.balance),
+                'My Wallet', FontAwesomeIcons.wallet,
+                color: secondaryColor),
+          ),
+          SizedBox(height: 15),
+          Container(
+            //height: 110,
+            child: customContainer(currencyFormat(user.getUser.referralBalance),
+                'Refferal Wallet', FontAwesomeIcons.user),
+          ),
+          SizedBox(height: 15),
+          Widgets.tabbedWidget([
+            {
+              'title': 'Wallet History',
+              'icon': FontAwesomeIcons.wallet,
+              'widget': Container(
+                height: 300,
+                child: checkNull(user.getUser.latestTransactions, latestTran,
+                    msg: 'No transaction history available'),
+              ),
+            },
+            {
+              'title': 'Refferal History',
+              'icon': FontAwesomeIcons.user,
+              'widget': Container(
+                height: 300,
+                child: checkNull(user.getUser.latestComissions, latestCom,
+                    msg: "No referral history available"),
+              ),
+            }
+          ], currentIndex: currentIndex, controller: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          }),
+        ],
+      ),
     );
   }
 
