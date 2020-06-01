@@ -60,8 +60,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         colors: [primaryColor, secondaryColor],
                         //stops: [0.5, 0.5],
                       ),
-                      /* image: DecorationImage(
-                    image: AssetImage('assets/img/background (2).jpg')), */
                     ),
                   ),
                   Widgets.listTile(
