@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:getflutter/getflutter.dart';
+//import 'package:getflutter/getflutter.dart';
 import 'package:moniwallet/global.dart';
 import 'package:moniwallet/pages/app/home.dart';
 import 'package:moniwallet/pages/auth/login.dart';
@@ -283,8 +283,8 @@ class Widgets {
     //var user = Provider.of<UserModel>(context, listen: false);
     return Container(
       //width: 250,
-      child: GFDrawer(
-        color: whiteColor,
+      child: Drawer(
+        //color: whiteColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

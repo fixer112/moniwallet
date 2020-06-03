@@ -14,7 +14,7 @@ import 'package:moniwallet/widgets/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:random_string/random_string.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_review/app_review.dart';
@@ -122,11 +122,6 @@ processResponse(statusCode, body, Function action) {
   }
 }
 
-localStorage() async {
-  SharedPreferences storage = await SharedPreferences.getInstance();
-  return storage;
-}
-
 Future<Null> saveJson(String content, {String fileName = 'user.json'}) async {
   Directory appDocDir = await getApplicationDocumentsDirectory();
   String path = appDocDir.path;
@@ -135,22 +130,12 @@ Future<Null> saveJson(String content, {String fileName = 'user.json'}) async {
   file.writeAsStringSync((content));
 }
 
-Future<Null> saveString(String key, value) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString(key, (value));
-}
-
 Future getJson({String fileName = 'user.json'}) async {
   Directory appDocDir = await getApplicationDocumentsDirectory();
   String path = appDocDir.path;
   var jsonFile = new File(path + "/" + fileName);
   bool fileExists = jsonFile.existsSync();
   return fileExists ? (jsonFile.readAsStringSync()) : null;
-}
-
-Future<String> getString(String key) async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(key);
 }
 
 Future<Null> removeJson({String fileName = 'user.json'}) async {

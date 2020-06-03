@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:firebase_remote_config/firebase_remote_config.dart';
+//import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 class UserModel extends ChangeNotifier {
   User user;
-  RemoteConfig _config;
+  //RemoteConfig _config;
   bool _isLoading = false;
 
   setUser(User newUser) {
@@ -21,12 +21,12 @@ class UserModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setConfig(RemoteConfig config) {
+  /* setConfig(RemoteConfig config) {
     _config = config;
     notifyListeners();
-  }
+  } */
 
-  RemoteConfig get getConfig => _config;
+  //RemoteConfig get getConfig => _config;
 
   User get getUser => user;
 
