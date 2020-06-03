@@ -32,7 +32,7 @@ class _FundState extends State<Fund> {
         child: Scaffold(
           backgroundColor: whiteColor,
           drawer: DrawerWidget(),
-          appBar: Widgets.appbar('Fund Wallet'),
+          appBar: Widgets.appbar('Fund Wallet', context),
           body: Consumer<UserModel>(builder: (context, user, child) {
             return Widgets.body(
                 user,

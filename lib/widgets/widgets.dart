@@ -9,7 +9,9 @@ import 'package:moniwallet/pages/app/home.dart';
 import 'package:moniwallet/pages/auth/login.dart';
 import 'package:moniwallet/providers/user.dart';
 import 'package:moniwallet/value.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class Widgets {
   static body(UserModel user, Widget body) {
@@ -19,16 +21,70 @@ class Widgets {
     ]);
   }
 
-  static appbar(String title,
+  static appbar(String title, BuildContext context,
       {Color color = whiteColor, Color backgroundColor = primaryColor}) {
+    var user = Provider.of<UserModel>(context, listen: false);
     return AppBar(
-        iconTheme: new IconThemeData(color: color),
-        elevation: 0,
-        backgroundColor: backgroundColor,
-        title: text(
-          title,
-          color: color,
-        ));
+      iconTheme: new IconThemeData(color: color),
+      elevation: 0,
+      backgroundColor: backgroundColor,
+      title: text(
+        title,
+        color: color,
+      ),
+      actions: <Widget>[
+        PopupMenuButton<String>(
+          onSelected: (value) async {
+            switch (value) {
+              case 'link':
+                Share.share(
+                    "Moniwallet is Nigeria's fastest growing bill payments plathform. Airtime, Data, Cable Tv, and many more at discount prices. Register through this link $url/?ref=${user.getUser.username} to also enjoy amazing discounts",
+                    subject: 'Register on MoniWallet');
+                break;
+              case 'app':
+                var p = await PackageInfo.fromPlatform();
+                Share.share(
+                    "Moniwallet is Nigeria's fastest growing bill payments plathform. Airtime, Data, Cable Tv, and many more at discount prices. Download app at https://play.google.com/store/apps/details?id=${p.packageName} to also enjoy amazing discounts",
+                    subject: 'Register on MoniWallet');
+                break;
+              default:
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            return {
+              ['Share Referral Link', 'link'],
+              ['Share Moniwallet App', 'app']
+            }.map((choice) {
+              return PopupMenuItem<String>(
+                value: choice[1],
+                child: ListTile(
+                  title: Text(choice[0]),
+                  //leading: Icon(Icons.link),
+                ),
+              );
+            }).toList();
+          },
+        ),
+        /* IconButton(
+          icon: Icon(
+            FontAwesomeIcons.link,
+            size: 10,
+          ),
+          onPressed: () {
+            //_select(choices[0]);
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.more_vert,
+            size: 10,
+          ),
+          onPressed: () {
+            //_select(choices[0]);
+          },
+        ), */
+      ],
+    );
   }
 
   static text(text,

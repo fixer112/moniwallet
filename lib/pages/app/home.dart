@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:moniwallet/global.dart';
 import 'package:moniwallet/providers/user.dart';
@@ -27,7 +28,7 @@ class _HomeState extends State<Home> {
     }
     generalAlert = false;
 
-    Timer.run(() => refreshLogin(context));
+    //Timer.run(() => refreshLogin(context));
 
     super.initState();
   }
@@ -41,7 +42,7 @@ class _HomeState extends State<Home> {
           Scaffold(
             backgroundColor: Colors.transparent,
             drawer: DrawerWidget(),
-            appBar: Widgets.appbar('MoniWallet',
+            appBar: Widgets.appbar('MoniWallet', context,
                 backgroundColor: Colors.transparent),
             body: Consumer<UserModel>(builder: (context, user, child) {
               return RefreshIndicator(
@@ -96,8 +97,12 @@ class _HomeState extends State<Home> {
           SizedBox(height: 15),
           Container(
             //height: 110,
-            child: customContainer(currencyFormat(user.getUser.referralBalance),
-                'Refferal Wallet', FontAwesomeIcons.user),
+            child: customContainer(
+              currencyFormat(user.getUser.referralBalance),
+              'Refferal Wallet',
+              FontAwesomeIcons.user,
+              ref: '$url/?ref=${user.getUser.username}',
+            ),
           ),
           SizedBox(height: 15),
           Widgets.tabbedWidget([
@@ -130,7 +135,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget customContainer(String text, String subText, var icon,
-      {Color color = primaryColor}) {
+      {Color color = primaryColor, String ref}) {
     return Container(
       child: Card(
         elevation: 10,
@@ -146,21 +151,30 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      subText,
-                      style: TextStyle(
-                          fontSize: 16, color: color.withOpacity(0.7)),
-                    ),
+                    Widgets.text(subText,
+                        fontSize: 16,
+                        color: color.withOpacity(0.7),
+                        fontWeight: FontWeight.normal),
                     SizedBox(
                       height: 3,
                     ),
-                    Text(
-                      text,
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: color),
-                    ),
+                    Widgets.text(text, fontSize: 25, color: color),
+                    if (ref != null)
+                      InkWell(
+                        onTap: () async {
+                          await Clipboard.setData(ClipboardData(text: ref))
+                              .then((text) {
+                            Widgets.snackbar(
+                                msg: 'Referral Link Copied',
+                                title: 'Copy Done');
+                          });
+                        },
+                        child: Widgets.text(
+                          'Referal link: $ref',
+                          fontSize: 7,
+                          color: color,
+                        ),
+                      ),
                   ],
                 ),
               ),

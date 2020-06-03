@@ -129,7 +129,7 @@ class _CableState extends State<Cable> {
         child: Scaffold(
           backgroundColor: whiteColor,
           drawer: DrawerWidget(),
-          appBar: Widgets.appbar('Cable'),
+          appBar: Widgets.appbar('Cable', context),
           body: Container(
             padding: EdgeInsets.all(20),
             child: Consumer<UserModel>(builder: (context, user, child) {
@@ -233,26 +233,23 @@ class _CableState extends State<Cable> {
                   value: plan,
                   /* networkPrice != null ? networkPrice : null, */
 
-                  onChanged: !enable
-                      ? null
-                      : (value) {
-                          closeKeybord(context);
-                          setState(() {
-                            plan = value;
-                            price = double.parse(value['price'].toString());
-                            priceString = value['price'].toString();
-                            var chaarges =
-                                double.parse(value['charges'].toString());
+                  onChanged: (value) {
+                    closeKeybord(context);
+                    setState(() {
+                      plan = value;
+                      price = double.parse(value['price'].toString());
+                      priceString = value['price'].toString();
+                      var chaarges = double.parse(value['charges'].toString());
 
-                            discount.text = (calDiscountAmount(
-                                        chaarges, discountPercentage) +
-                                    price)
-                                .toString();
-                            //networkPrice = "$value";
-                            //price = double.parse(value.replaceAll(network, ''));
-                            //print(price);
-                          });
-                        },
+                      discount.text =
+                          (calDiscountAmount(chaarges, discountPercentage) +
+                                  price)
+                              .toString();
+                      //networkPrice = "$value";
+                      //price = double.parse(value.replaceAll(network, ''));
+                      //print(price);
+                    });
+                  },
                 ),
               ),
             ),

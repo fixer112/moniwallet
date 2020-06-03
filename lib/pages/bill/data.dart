@@ -47,14 +47,14 @@ class _DataState extends State<Data> {
         child: Scaffold(
           backgroundColor: whiteColor,
           drawer: DrawerWidget(),
-          appBar: Widgets.appbar('Data'),
+          appBar: Widgets.appbar('Data',context),
           body: Container(
             padding: EdgeInsets.all(20),
             child: Consumer<UserModel>(builder: (context, user, child) {
-              return Widgets.body(
-                user,
+              return Stack(children: [
                 body(user),
-              );
+                Widgets.loader(user),
+              ]);
             }),
           ),
         ));

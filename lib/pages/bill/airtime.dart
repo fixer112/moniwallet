@@ -61,7 +61,7 @@ class _AirtimeState extends State<Airtime> {
         child: Scaffold(
           backgroundColor: whiteColor,
           drawer: DrawerWidget(),
-          appBar: Widgets.appbar('Airtime'),
+          appBar: Widgets.appbar('Airtime', context),
           body: Container(
             padding: EdgeInsets.all(20),
             child: Consumer<UserModel>(builder: (context, user, child) {
