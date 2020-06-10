@@ -20,7 +20,7 @@ class User {
   final double referralBalance;
   final bool isActive;
   final bool isReseller;
-  final int points;
+  final double points;
   final String email;
   final String apiToken;
   final String type;
@@ -72,7 +72,7 @@ class User {
       settings: data['settings'],
       isActive: data['is_active'] == '1' ? true : false,
       isReseller: data['is_reseller'] == '1' ? true : false,
-      points: int.parse(data['points']),
+      points: double.parse(data['points'].toString()),
       number: data['number'],
       latestTransactions: List<Transaction>.from(data['latest_transactions']
           .map((i) => Transaction.fromMap(i))
@@ -80,8 +80,8 @@ class User {
       latestComissions: List<Comission>.from(
           data['latest_comissions'].map((i) => Comission.fromMap(i)).toList()),
       createdAt: DateTime.parse(data['created_at']) ?? null,
-      balance: double.parse(data['balance']),
-      referralBalance: double.parse(data['referral_balance']),
+      balance: double.parse(data['balance'].toString()),
+      referralBalance: double.parse(data['referral_balance'].toString()),
       packageName: data['package_name'],
       bankName: data['bank_name'] ?? '',
       accountNumber: data['account_number'] ?? '',

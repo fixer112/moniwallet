@@ -26,8 +26,8 @@ class Transaction {
   factory Transaction.fromMap(Map data) {
     return Transaction(
       id: data['id'],
-      amount: double.parse(data['amount']),
-      balance: double.parse(data['balance']),
+      amount: double.parse(data['amount'].toString()),
+      balance: double.parse(data['balance'].toString()),
       desc: data['desc'],
       isOnline: data['is_online'] == '1' ? true : false,
       reason: data['reason'],

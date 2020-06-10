@@ -31,7 +31,7 @@ logout() async {
 }
 
 currencyFormat(number) {
-  var f = NumberFormat("#,###");
+  var f = NumberFormat("#,###.##");
   return '₦' + f.format(number);
 }
 

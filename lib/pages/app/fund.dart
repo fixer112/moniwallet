@@ -18,7 +18,7 @@ class _FundState extends State<Fund> {
   @override
   void initState() {
     var user = Provider.of<UserModel>(context, listen: false);
-    var publicKey = user.getUser.settings['paystack_key'];
+    var publicKey = user.getUser.settings['paystack_key_app'];
     print(publicKey);
 
     PaystackPlugin.initialize(publicKey: publicKey);
@@ -106,9 +106,15 @@ class _FundState extends State<Fund> {
                           }
                           var minFund =
                               user.getUser.settings['min_fund'].toString();
-                          if (int.parse(amount.text) < int.parse(minFund)) {
+                          var maxFund =
+                              user.getUser.settings['max_fund'].toString();
+                          if (double.parse(amount.text) < int.parse(minFund)) {
                             return Widgets.snackbar(
                                 msg: "Minimum Allowed amount is $minFund");
+                          }
+                          if (double.parse(amount.text) > int.parse(maxFund)) {
+                            return Widgets.snackbar(
+                                msg: "Maximum Allowed amount is $maxFund");
                           }
                           return checkOut(
                             context,
