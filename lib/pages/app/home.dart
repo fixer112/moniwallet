@@ -67,6 +67,8 @@ class _HomeState extends State<Home> {
                 'amount': transaction.amount,
                 'date': transaction.createdAt.toLocal().toString(),
                 'type': transaction.type,
+                'ref': transaction.ref,
+                'balance': transaction.balance,
               }, () {}),
             )
             .toList());
@@ -79,6 +81,8 @@ class _HomeState extends State<Home> {
                 'amount': transaction.amount,
                 'date': transaction.createdAt.toString(),
                 'type': 'credit',
+                'ref': transaction.ref,
+                'balance': transaction.balance,
               }, () {}),
             )
             .toList());

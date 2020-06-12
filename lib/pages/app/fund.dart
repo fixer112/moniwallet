@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:moniwallet/global.dart';
 import 'package:moniwallet/providers/user.dart';
@@ -17,11 +16,7 @@ class _FundState extends State<Fund> {
   var amount = TextEditingController();
   @override
   void initState() {
-    var user = Provider.of<UserModel>(context, listen: false);
-    var publicKey = user.getUser.settings['paystack_key_app'];
-    print(publicKey);
-
-    PaystackPlugin.initialize(publicKey: publicKey);
+    //PaystackPlugin.initialize(publicKey: publicKey);
     super.initState();
   }
 
@@ -97,7 +92,7 @@ class _FundState extends State<Fund> {
                       ),
                       Widgets.text('Amount'),
                       Widgets.input(amount, context,
-                          type: TextInputType.number,
+                          type: TextInputType.numberWithOptions(decimal: true),
                           icondata: FontAwesomeIcons.moneyBillAlt),
                       Widgets.button('Fund Wallet Online', context, () {
                         if (!user.isloading) {
@@ -119,7 +114,7 @@ class _FundState extends State<Fund> {
                           return checkOut(
                             context,
                             user: user,
-                            amount: int.parse(amount.text),
+                            amount: double.parse(amount.text),
                           );
                         }
                       }),

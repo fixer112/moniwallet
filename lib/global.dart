@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +14,7 @@ import 'package:moniwallet/widgets/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:random_string/random_string.dart';
+import 'package:rave_flutter/rave_flutter.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -179,12 +180,53 @@ String _getReference(id) {
 checkOut(
   BuildContext context, {
   @required UserModel user,
-  @required int amount,
+  @required double amount,
 }) async {
-  var charges = 1.5 / 100;
-  var chargeAmount = (amount / (1 - charges)).ceil() * 100;
-  Charge charge = Charge()
-    ..amount = chargeAmount
+  //amount = amount + (amount * 1.4);
+  var publicKey = user.getUser.settings['rave_public_key_app'];
+  var encryptionKey = user.getUser.settings['rave_enc_key_app'];
+  var ref = "mw-${_getReference(user.user.id)}";
+  print(publicKey);
+  print(encryptionKey);
+  //var charges = 1.4 / 100;
+  //var chargeAmount = (amount / (1 - charges)).ceil() * 100;
+  var initializer = RavePayInitializer(
+      amount: amount, publicKey: publicKey, encryptionKey: encryptionKey)
+    ..country = "NG"
+    ..redirectUrl = '$url/verify/hook'
+    ..currency = "NGN"
+    ..email = user.user.email
+    ..fName = user.user.firstname
+    ..lName = user.user.lastname
+    ..narration = 'Wallet funding from app'
+    ..txRef = ref
+    ..companyLogo = Image.asset("assets/img/logo.png")
+    ..companyName = Text("MoniWallet")
+    ..displayFee = true
+    ..staging = kDebugMode
+    ..meta = {
+      //'metaname': 'user_id',
+      //'metavalue': user.user.id.toString(),
+      'user_id': user.user.id.toString(),
+      'reason': 'top-up',
+      'amount': amount.toString(),
+    };
+
+  //..subAccounts = subAccounts
+  //..acceptMpesaPayments = acceptMpesaPayment
+  //..acceptAccountPayments = acceptAccountPayment
+  //..acceptCardPayments = acceptCardPayment
+  //..acceptAchPayments = acceptAchPayments
+  //..acceptGHMobileMoneyPayments = acceptGhMMPayments
+  //..acceptUgMobileMoneyPayments = acceptUgMMPayments
+  //..isPreAuth = preAuthCharge
+
+  // Initialize and get the transaction result
+  RaveResult response =
+      await RavePayManager().prompt(context: context, initializer: initializer);
+
+  /* Charge charge = Charge()
+    ..amount = amount
     ..reference = _getReference(user.user.id)
     ..putMetaData('user_id', user.user.id)
     ..putMetaData('reason', 'top-up')
@@ -195,13 +237,16 @@ checkOut(
     context,
     method: CheckoutMethod.card, // Defaults to CheckoutMethod.selectable
     charge: charge,
-  );
-  print(res.toString());
-  if (res.message != 'Transaction terminated') {
-    try {
+  ); */
+  print(response.message);
+  //return;
+  if (response.status == RaveStatus.success) {
+    refreshLogin(context);
+    return Widgets.transactionAlert(
+        "Payment of ${currencyFormat(amount)} successfull", context);
+    /* try {
       user.setLoading(true);
-      final response =
-          await http.get('$url/verify/wallet/fund/${res.reference}', headers: {
+      final response = await http.get('$url/verify/wallet/fund/$ref', headers: {
         'Accept': 'application/json',
       });
       user.setLoading(false);
@@ -218,7 +263,9 @@ checkOut(
       user.setLoading(false);
       Widgets.snackbar(msg: connErrorMsg);
       //snackbar(connErrorMsg, context, _scaffoldKey);
-    }
+    } */
+  } else {
+    Widgets.snackbar(msg: response.message);
   }
 }
 

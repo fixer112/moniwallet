@@ -594,13 +594,32 @@ class Widgets {
           margin: EdgeInsets.only(bottom: 10),
           child: text(data['desc'], fontSize: 15),
         ),
-        subtitle:
+        subtitle: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            text(data['ref'], fontSize: 12),
+            SizedBox(height: 5),
             text(data['date'], fontSize: 11, fontWeight: FontWeight.normal),
-        trailing: text(
-            (data['type'] == 'debit' ? '-' : '') +
-                currencyFormat(data['amount']),
-            color: (data['type'] == 'credit' ? secondaryColor : primaryColor),
-            fontSize: 16),
+          ],
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            text(
+                (data['type'] == 'debit' ? '-' : '') +
+                    currencyFormat(data['amount']),
+                color:
+                    (data['type'] == 'credit' ? secondaryColor : primaryColor),
+                fontSize: 16),
+            SizedBox(height: 5),
+            text(currencyFormat(data['balance']),
+                color:
+                    (data['type'] == 'credit' ? secondaryColor : primaryColor),
+                fontSize: 12),
+          ],
+        ),
         onTap: f,
       ),
     );

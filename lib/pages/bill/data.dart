@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:moniwallet/global.dart';
@@ -28,6 +30,13 @@ class _DataState extends State<Data> {
   @override
   void initState() {
     //print("discount " + user.getUser.settings);
+    var user = Provider.of<UserModel>(context, listen: false);
+
+    if (user.getUser.settings['data_alert'] != "" && dataAlert) {
+      Timer.run(
+          () => Widgets.alert(user.getUser.settings['data_alert'], context));
+    }
+    dataAlert = false;
 
     super.initState();
   }
@@ -47,7 +56,7 @@ class _DataState extends State<Data> {
         child: Scaffold(
           backgroundColor: whiteColor,
           drawer: DrawerWidget(),
-          appBar: Widgets.appbar('Data',context),
+          appBar: Widgets.appbar('Data', context),
           body: Container(
             padding: EdgeInsets.all(20),
             child: Consumer<UserModel>(builder: (context, user, child) {
