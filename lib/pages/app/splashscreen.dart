@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:moniwallet/global.dart';
 import 'package:moniwallet/pages/auth/login.dart';
 import 'package:moniwallet/widgets/widgets.dart';
 import 'package:package_info/package_info.dart';
@@ -23,6 +24,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     print(url);
+    getRemoteConfig(context).then((config) {
+      checkUpdateForce(context).then((b) {
+        if (!b) {
+          Future.delayed(Duration(seconds: 3), () {
+            Get.to(Login());
+          });
+        }
+      });
+    });
     /* quickActions.initialize((shortcutType) {
       if (shortcutType == 'airtime') {
         Get.to(Airtime());
@@ -44,9 +54,6 @@ class _SplashScreenState extends State<SplashScreen> {
           type: 'airtime', localizedTitle: 'Airtime', icon: 'phone'),
     ]); */
     _initPackageInfo();
-    Future.delayed(Duration(seconds: 3), () {
-      Get.to(Login());
-    });
 
     super.initState();
   }

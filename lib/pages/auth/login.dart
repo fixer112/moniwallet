@@ -52,6 +52,10 @@ class _LoginState extends State<Login> {
       Get.to(Home());
     } */
 
+    getRemoteConfig(context).then((config) {
+      checkUpdate(context);
+    });
+
     super.initState();
   }
 
@@ -125,6 +129,7 @@ class _LoginState extends State<Login> {
             if ([username.text, password.text].contains('')) {
               return Widgets.snackbar(msg: 'All inputs are required');
             }
+
             user.login(username.text, password.text, context);
           }
         }),

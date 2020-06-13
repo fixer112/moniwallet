@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "190032867274",
+    "firebase_url": "https://moniwallet.firebaseio.com",
+    "project_id": "moniwallet",
+    "storage_bucket": "moniwallet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190032867274:android:ee33b7fe0fee53e960e933",
+        "android_client_info": {
+          "package_name": "com.altechtic.moniwallet.moniwallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "190032867274-2j3nmuj717opgahoesm6seki5jii95ul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_kve0bMpWs1uLjyTYlPBpW9uOgMEXkB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "190032867274-2j3nmuj717opgahoesm6seki5jii95ul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

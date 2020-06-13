@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,6 +11,7 @@ import 'package:moniwallet/value.dart';
 import 'package:moniwallet/widgets/drawer.dart';
 import 'package:moniwallet/widgets/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   @override
@@ -17,6 +20,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int currentIndex = 0;
+  FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
 
   @override
   void initState() {
@@ -30,6 +34,45 @@ class _HomeState extends State<Home> {
 
     //Timer.run(() => refreshLogin(context));
 
+    firebaseMessaging.getToken().then((token) async {
+      print('FCM Token: $token');
+      var response = await http.post(
+          '$url/api/user/${user.user.id}/update_token?api_token=${user.user.apiToken}',
+          body: {
+            'app_token': token,
+          },
+          headers: {
+            'Accept': 'application/json',
+          });
+
+      print((response.body));
+    });
+
+    firebaseMessaging.requestNotificationPermissions();
+
+    firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) {
+        print('onMessage called: $message');
+        /*  showNotificationWithDefaultSound(
+            message['data']['title'], message['data']['body']);
+         */
+        return;
+      },
+      onResume: (Map<String, dynamic> message) {
+        print('onResume called: $message');
+        return;
+      },
+      onLaunch: (Map<String, dynamic> message) {
+        print('onLaunch called: $message');
+        return;
+      },
+      onBackgroundMessage: bgMsgHdl,
+    );
+    firebaseMessaging.getToken().then((token) {
+      print('FCM Token: $token');
+    });
+
+    firebaseMessaging.subscribeToTopic('global');
     super.initState();
   }
 

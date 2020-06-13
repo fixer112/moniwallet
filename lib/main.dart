@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,13 +27,16 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'MoniWallet',
       theme: ThemeData(
-          //iconTheme: IconThemeData(color: whiteColor),
-          textTheme: GoogleFonts.mavenProTextTheme(
-            Theme.of(context).textTheme,
-          ),
-          primarySwatch: primarySwatch,
-          ),
+        //iconTheme: IconThemeData(color: whiteColor),
+        textTheme: GoogleFonts.mavenProTextTheme(
+          Theme.of(context).textTheme,
+        ),
+        primarySwatch: primarySwatch,
+      ),
       home: SplashScreen(),
+      navigatorObservers: [
+        FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+      ],
       debugShowCheckedModeBanner: false,
     );
   }

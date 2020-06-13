@@ -2,11 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:moniwallet/pages/app/upgrade_alert.dart';
 import 'package:moniwallet/pages/auth/login.dart';
 import 'package:moniwallet/providers/user.dart';
 import 'package:moniwallet/value.dart';
@@ -19,13 +23,32 @@ import 'package:rave_flutter/rave_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_review/app_review.dart';
+import 'package:package_info/package_info.dart';
+import 'package:version/version.dart';
 
 bool generalAlert = true;
 bool airtimeAlert = true;
 bool dataAlert = true;
 bool cableAlert = true;
 
-logout() async {
+logout(context) async {
+  FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
+  var user = Provider.of<UserModel>(context, listen: false);
+  if (user.user != null) {
+    //FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
+    firebaseMessaging.getToken().then((token) async {
+      print('FCM Token: $token');
+      var response = await http.post(
+          '$url/api/user/${user.user.id}/remove_token?api_token=${user.user.apiToken}',
+          body: {
+            'app_token': token,
+          },
+          headers: {
+            'Accept': 'application/json',
+          });
+      print(response.body);
+    });
+  }
   await removeJson();
   await removeJson(fileName: 'credentials.json');
   Get.to(Login());
@@ -78,7 +101,7 @@ Future transaction(
         await appReview();
         return Widgets.transactionAlert(body['desc'], context);
       }
-    });
+    }, context);
     return;
   } catch (e) {
     user.setLoading(false);
@@ -89,17 +112,17 @@ Future transaction(
   }
 }
 
-request(Response response, Function action) {
+request(Response response, Function action, context) {
   print(response.statusCode);
   var body = json.decode(response.body);
-  print(body);
-  return processResponse(response.statusCode, body, action);
+  //print(body);
+  return processResponse(response.statusCode, body, action, context);
 }
 
-processResponse(statusCode, body, Function action) {
+processResponse(statusCode, body, Function action, context) {
   if (statusCode == 401) {
     Widgets.snackbar(msg: 'Please re login');
-    return logout();
+    return logout(context);
   }
   if (statusCode == 422) {
     var errors = '';
@@ -163,6 +186,8 @@ refreshLogin(BuildContext context, {bool refresh = true}) async {
   var user = Provider.of<UserModel>(context, listen: false);
   var credentials = await getJson(fileName: 'credentials.json');
   credentials = json.decode(credentials);
+  await getRemoteConfig(context);
+  await checkUpdateForce(context);
   user.login(credentials['username'], credentials['password'], context,
       isRefresh: refresh);
 }
@@ -284,4 +309,96 @@ appReview({minCount = 2}) async {
   });
 
   //}
+}
+
+Future<PackageInfo> initPackageInfo() async {
+  final PackageInfo info = await PackageInfo.fromPlatform();
+  return info;
+}
+
+Future<RemoteConfig> getRemoteConfig(BuildContext context) async {
+  var user = Provider.of<UserModel>(context, listen: false);
+  var info = await initPackageInfo();
+  final RemoteConfig remoteConfig = await RemoteConfig.instance;
+  final defaults = <String, dynamic>{
+    'latest_version_force': info.version,
+    'latest_version': info.version,
+  };
+  remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
+  await remoteConfig.setDefaults(defaults);
+
+  try {
+    await remoteConfig.fetch(expiration: Duration(seconds: 0));
+    await remoteConfig.activateFetched();
+  } catch (e) {
+    print(e);
+  }
+
+  user.setConfig(remoteConfig);
+
+  print('latest version ${remoteConfig.getString('latest_version')}');
+  print(
+      'latest version force ${remoteConfig.getString('latest_version_force')}');
+  return remoteConfig;
+}
+
+Future<bool> checkUpdate(BuildContext context) async {
+  var user = Provider.of<UserModel>(context, listen: false);
+  var info = await initPackageInfo();
+  var latestVersion = Version.parse(user.getConfig.getString('latest_version'));
+  var currentVersion = Version.parse(info.version);
+  if (latestVersion > currentVersion) {
+    Widgets.updateAlert(
+        latestVersion.toString(), currentVersion.toString(), context);
+    return true;
+  }
+  return false;
+}
+
+Future<bool> checkUpdateForce(BuildContext context) async {
+  var user = Provider.of<UserModel>(context, listen: false);
+  var info = await initPackageInfo();
+  var latestVersion =
+      Version.parse(user.getConfig.getString('latest_version_force'));
+  var currentVersion = Version.parse(info.version);
+  if (latestVersion > currentVersion) {
+    Get.to(UpgradeAlert());
+    return true;
+  }
+  return false;
+}
+
+Future showNotificationWithDefaultSound(String title, String message) async {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  var initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  var initializationSettingsIOS =
+      IOSInitializationSettings(onDidReceiveLocalNotification: null);
+  var initializationSettings = InitializationSettings(
+      initializationSettingsAndroid, initializationSettingsIOS);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (s) {
+    print(s);
+    return;
+  });
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      '1', 'Notification', '',
+      importance: Importance.Max, priority: Priority.Max, ticker: 'ticker');
+  var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+  var platformChannelSpecifics = NotificationDetails(
+      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    '$title',
+    '$message',
+    platformChannelSpecifics,
+    payload: 'Default_Sound',
+  );
+}
+
+Future bgMsgHdl(Map<String, dynamic> message) async {
+  print("onbgMessage: $message");
+  showNotificationWithDefaultSound(
+      message['data']['title'], message['data']['body']);
 }

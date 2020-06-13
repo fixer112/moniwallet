@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 //import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +14,7 @@ import 'package:provider/provider.dart';
 
 class UserModel extends ChangeNotifier {
   User user;
-  //RemoteConfig _config;
+  RemoteConfig _config;
   bool _isLoading = false;
 
   setUser(User newUser) {
@@ -21,12 +22,12 @@ class UserModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /* setConfig(RemoteConfig config) {
+  setConfig(RemoteConfig config) {
     _config = config;
     notifyListeners();
-  } */
+  }
 
-  //RemoteConfig get getConfig => _config;
+  RemoteConfig get getConfig => _config;
 
   User get getUser => user;
 
@@ -60,7 +61,7 @@ class UserModel extends ChangeNotifier {
       if ((response.statusCode < 200 || response.statusCode >= 300) &&
           isRefresh) {
         Widgets.snackbar(msg: 'Please re login');
-        return logout();
+        return logout(context);
       }
       request(response, () async {
         if (body != null) {
@@ -72,8 +73,10 @@ class UserModel extends ChangeNotifier {
               fileName: 'credentials.json');
         }
 
-        if (!isRefresh) Get.to(Home());
-      });
+        if (!isRefresh) {
+          Get.to(Home());
+        }
+      }, context);
       return;
     } catch (e) {
       user.setLoading(false);

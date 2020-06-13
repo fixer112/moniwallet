@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:app_review/app_review.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,38 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 class Widgets {
+  static updateAlert(String latest, String current, BuildContext context,
+      {title = "Update Available"}) {
+    Widget cancelButton = FlatButton(
+      child: Text("Later"),
+      onPressed: () {
+        Get.back();
+      },
+    );
+
+    Widget updateButton = FlatButton(
+      child: Text("Update Now"),
+      onPressed: () async {
+        await AppReview.storeListing;
+        Get.back();
+      },
+    );
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(
+              "Version $latest is available, you are currently using version $current"),
+          actions: [
+            cancelButton,
+            updateButton,
+          ],
+        );
+      },
+    );
+  }
+
   static body(UserModel user, Widget body) {
     return Stack(children: [
       body,

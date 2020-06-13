@@ -92,7 +92,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       'Logout',
                       FontAwesomeIcons.powerOff,
                       action: () async {
-                        await logout();
+                        await logout(context);
                       },
                       color: Colors.red,
                     ),
