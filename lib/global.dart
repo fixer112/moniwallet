@@ -378,13 +378,14 @@ Future showNotificationWithDefaultSound(String title, String message) async {
   var initializationSettings = InitializationSettings(
       initializationSettingsAndroid, initializationSettingsIOS);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onSelectNotification: (s) {
-    print(s);
-    return;
-  });
+      onSelectNotification: null);
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       '1', 'Notification', '',
-      importance: Importance.Max, priority: Priority.Max, ticker: 'ticker');
+      importance: Importance.Max,
+      priority: Priority.Max,
+      ticker: 'ticker',
+      ongoing: true,
+      styleInformation: BigTextStyleInformation(''));
   var iOSPlatformChannelSpecifics = IOSNotificationDetails();
   var platformChannelSpecifics = NotificationDetails(
       androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
@@ -395,10 +396,21 @@ Future showNotificationWithDefaultSound(String title, String message) async {
     platformChannelSpecifics,
     payload: 'Default_Sound',
   );
+  //Widgets.alert(message, Get.context, title: title);
 }
 
 Future bgMsgHdl(Map<String, dynamic> message) async {
-  print("onbgMessage: $message");
+  //print("onbgMessage: $message");
+  /* Builder(
+    builder: (context) {
+      return Widgets.alert(message['data']['body'], context,
+          title: message['data']['title']);
+    },
+  ); */
+  /* if (Get.context != null)
+    Widgets.alert(message['data']['body'], Get.context,
+        title: message['data']['title']); */
+
   showNotificationWithDefaultSound(
       message['data']['title'], message['data']['body']);
 }
