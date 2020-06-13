@@ -24,6 +24,7 @@ class _UpgradeAlertState extends State<UpgradeAlert> {
       currentVersion = Version.parse(info.version);
       setState(() {});
     });
+
     super.initState();
   }
 
@@ -58,8 +59,21 @@ class _UpgradeAlertState extends State<UpgradeAlert> {
                       SizedBox(
                         height: 5,
                       ),
-                      Widgets.button("UPDATE NOW", context,
-                          () async => await AppReview.storeListing),
+                      Container(
+                        height: 54,
+                        margin: EdgeInsets.symmetric(vertical: 15),
+                        child: FlatButton(
+                          disabledColor: Colors.grey,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6)),
+                          color: primaryColor,
+                          child: Text(
+                            'UPDATE NOW',
+                            style: TextStyle(color: whiteColor),
+                          ),
+                          onPressed: () async => await AppReview.storeListing,
+                        ),
+                      ),
                     ],
                   ),
                 ),
