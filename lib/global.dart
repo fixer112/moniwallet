@@ -30,6 +30,7 @@ bool generalAlert = true;
 bool airtimeAlert = true;
 bool dataAlert = true;
 bool cableAlert = true;
+bool firstLoad = true;
 
 logout(context) async {
   FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
@@ -235,6 +236,8 @@ checkOut(
       'user_id': user.user.id.toString(),
       'reason': 'top-up',
       'amount': amount.toString(),
+      'plathform': 'app',
+      'number': user.user.number,
     };
 
   //..subAccounts = subAccounts
@@ -400,7 +403,7 @@ Future showNotificationWithDefaultSound(String title, String message) async {
 }
 
 Future bgMsgHdl(Map<String, dynamic> message) async {
-  //print("onbgMessage: $message");
+  print("onbgMessage: $message");
   /* Builder(
     builder: (context) {
       return Widgets.alert(message['data']['body'], context,

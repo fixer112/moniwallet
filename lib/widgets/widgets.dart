@@ -71,7 +71,7 @@ class Widgets {
             switch (value) {
               case 'link':
                 Share.share(
-                    "Moniwallet is Nigeria's fastest growing bill payments plathform. Airtime, Data, Cable Tv, and many more at discount prices. Register through this link $url/?ref=${user.getUser.username} to also enjoy amazing discounts",
+                    "Moniwallet is Nigeria's fastest growing bill payments plathform. Airtime, Data, Cable Tv, and many more at discount prices. Register through this link ${user.getUser.settings['ref_link']} to also enjoy amazing discounts",
                     subject: 'Register on MoniWallet');
                 break;
               case 'app':

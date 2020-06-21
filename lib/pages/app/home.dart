@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +30,11 @@ class _HomeState extends State<Home> {
           () => Widgets.alert(user.getUser.settings['general_alert'], context));
     }
     generalAlert = false;
+
+    if (firstLoad) {
+      Timer.run(() => refreshLogin(context));
+    }
+    firstLoad = false;
 
     //Timer.run(() => refreshLogin(context));
 
@@ -148,7 +152,7 @@ class _HomeState extends State<Home> {
               currencyFormat(user.getUser.referralBalance),
               'Refferal Wallet',
               FontAwesomeIcons.user,
-              ref: '$url/?ref=${user.getUser.username}',
+              ref: user.getUser.settings['ref_link'],
             ),
           ),
           SizedBox(height: 15),

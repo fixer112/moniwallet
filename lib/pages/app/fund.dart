@@ -29,6 +29,8 @@ class _FundState extends State<Fund> {
           drawer: DrawerWidget(),
           appBar: Widgets.appbar('Fund Wallet', context),
           body: Consumer<UserModel>(builder: (context, user, child) {
+            var minFund = user.getUser.settings['min_fund'].toString();
+            var maxFund = user.getUser.settings['max_fund'].toString();
             return Widgets.body(
                 user,
                 Padding(
@@ -90,34 +92,37 @@ class _FundState extends State<Fund> {
                       SizedBox(
                         height: 20,
                       ),
-                      Widgets.text('Amount'),
-                      Widgets.input(amount, context,
-                          type: TextInputType.numberWithOptions(decimal: true),
-                          icondata: FontAwesomeIcons.moneyBillAlt),
-                      Widgets.button('Fund Wallet Online', context, () {
-                        if (!user.isloading) {
-                          if (amount.text == '') {
-                            return Widgets.snackbar(msg: "Amount is required");
+                      if (int.parse(maxFund) > 0) Widgets.text('Amount'),
+                      if (int.parse(maxFund) > 0)
+                        Widgets.input(amount, context,
+                            type:
+                                TextInputType.numberWithOptions(decimal: true),
+                            icondata: FontAwesomeIcons.moneyBillAlt),
+                      if (int.parse(maxFund) > 0)
+                        Widgets.button('Fund Wallet Online', context, () {
+                          if (!user.isloading) {
+                            if (amount.text == '') {
+                              return Widgets.snackbar(
+                                  msg: "Amount is required");
+                            }
+
+                            if (double.parse(amount.text) <
+                                int.parse(minFund)) {
+                              return Widgets.snackbar(
+                                  msg: "Minimum Allowed amount is $minFund");
+                            }
+                            if (double.parse(amount.text) >
+                                int.parse(maxFund)) {
+                              return Widgets.snackbar(
+                                  msg: "Maximum Allowed amount is $maxFund");
+                            }
+                            return checkOut(
+                              context,
+                              user: user,
+                              amount: double.parse(amount.text),
+                            );
                           }
-                          var minFund =
-                              user.getUser.settings['min_fund'].toString();
-                          var maxFund =
-                              user.getUser.settings['max_fund'].toString();
-                          if (double.parse(amount.text) < int.parse(minFund)) {
-                            return Widgets.snackbar(
-                                msg: "Minimum Allowed amount is $minFund");
-                          }
-                          if (double.parse(amount.text) > int.parse(maxFund)) {
-                            return Widgets.snackbar(
-                                msg: "Maximum Allowed amount is $maxFund");
-                          }
-                          return checkOut(
-                            context,
-                            user: user,
-                            amount: double.parse(amount.text),
-                          );
-                        }
-                      }),
+                        }),
                     ],
                   ),
                 ));
