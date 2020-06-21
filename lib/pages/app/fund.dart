@@ -31,6 +31,8 @@ class _FundState extends State<Fund> {
           body: Consumer<UserModel>(builder: (context, user, child) {
             var minFund = user.getUser.settings['min_fund'].toString();
             var maxFund = user.getUser.settings['max_fund'].toString();
+            bool enablePayment = user.getUser.settings['enable_online_payment'];
+
             return Widgets.body(
                 user,
                 Padding(
@@ -92,13 +94,13 @@ class _FundState extends State<Fund> {
                       SizedBox(
                         height: 20,
                       ),
-                      if (int.parse(maxFund) > 0) Widgets.text('Amount'),
-                      if (int.parse(maxFund) > 0)
+                      if (enablePayment) Widgets.text('Amount'),
+                      if (enablePayment)
                         Widgets.input(amount, context,
                             type:
                                 TextInputType.numberWithOptions(decimal: true),
                             icondata: FontAwesomeIcons.moneyBillAlt),
-                      if (int.parse(maxFund) > 0)
+                      if (enablePayment)
                         Widgets.button('Fund Wallet Online', context, () {
                           if (!user.isloading) {
                             if (amount.text == '') {

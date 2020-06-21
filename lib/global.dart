@@ -116,7 +116,7 @@ Future transaction(
 request(Response response, Function action, context) {
   print(response.statusCode);
   var body = json.decode(response.body);
-  //print(body);
+  print(body);
   return processResponse(response.statusCode, body, action, context);
 }
 
