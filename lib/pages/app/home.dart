@@ -116,6 +116,7 @@ class _HomeState extends State<Home> {
                 'type': transaction.type,
                 'ref': transaction.ref,
                 'balance': transaction.balance,
+                'status': transaction.status,
               }, () {}),
             )
             .toList());
@@ -130,6 +131,7 @@ class _HomeState extends State<Home> {
                 'type': 'credit',
                 'ref': transaction.ref,
                 'balance': transaction.balance,
+                'status': transaction.status,
               }, () {}),
             )
             .toList());

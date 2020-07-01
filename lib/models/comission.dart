@@ -8,6 +8,7 @@ class Comission {
   final String desc;
   final String ref;
   final DateTime createdAt;
+  final String status;
 
   Comission({
     this.id,
@@ -19,6 +20,7 @@ class Comission {
     this.level,
     this.referralId,
     this.userId,
+    this.status,
   });
 
   factory Comission.fromMap(Map data) {
@@ -32,6 +34,7 @@ class Comission {
       level: data['level'],
       userId: data['user_id'],
       createdAt: DateTime.parse(data['created_at']) ?? null,
+      status: data['status'],
     );
   }
   Map<String, dynamic> toJson() => {
@@ -44,5 +47,6 @@ class Comission {
         'level': level,
         'user_id': userId,
         'created_at': createdAt.toIso8601String(),
+        'status': status,
       };
 }

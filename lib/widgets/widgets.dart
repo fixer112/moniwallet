@@ -610,6 +610,21 @@ class Widgets {
   }
 
   static paymentCard(Map data, Function f) {
+    var font = FontAwesomeIcons.check;
+    var color = Colors.green;
+
+    switch (data['status']) {
+      case 'pending':
+        font = FontAwesomeIcons.solidClock;
+        color = Colors.blue;
+        break;
+      case 'failed':
+        font = FontAwesomeIcons.times;
+        color = Colors.red;
+        break;
+      default:
+    }
+
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.all(10),
@@ -617,11 +632,30 @@ class Widgets {
       child: ListTile(
         contentPadding: EdgeInsets.zero,
         dense: true,
-        leading: Icon(
-          data['type'] == 'credit'
-              ? FontAwesomeIcons.caretUp
-              : FontAwesomeIcons.caretDown,
-          color: (data['type'] == 'credit' ? secondaryColor : primaryColor),
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Icon(
+              data['type'] == 'credit'
+                  ? FontAwesomeIcons.caretUp
+                  : FontAwesomeIcons.caretDown,
+              color: (data['type'] == 'credit' ? secondaryColor : primaryColor),
+            ),
+            Container(
+              //color: Colors.green,
+              height: 15,
+              width: 15,
+              decoration: BoxDecoration(
+                  color: color,
+                  //border: Border.all(),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              child: Icon(
+                font,
+                size: 12,
+                color: whiteColor,
+              ),
+            ),
+          ],
         ),
         title: Container(
           margin: EdgeInsets.only(bottom: 10),

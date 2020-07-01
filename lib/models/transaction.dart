@@ -7,6 +7,7 @@ class Transaction {
   final String desc;
   final String reason;
   final bool isOnline;
+  final String status;
   final String ref;
   final DateTime createdAt;
 
@@ -21,6 +22,7 @@ class Transaction {
     this.ref,
     this.type,
     this.userId,
+    this.status,
   });
 
   factory Transaction.fromMap(Map data) {
@@ -35,6 +37,7 @@ class Transaction {
       ref: data['ref'],
       userId: data['user_id'],
       createdAt: DateTime.parse(data['created_at']) ?? null,
+      status: data['status'],
     );
   }
   Map<String, dynamic> toJson() => {
@@ -48,5 +51,6 @@ class Transaction {
         'ref': ref,
         'user_id': userId,
         'created_at': createdAt.toIso8601String(),
+        'status': status,
       };
 }
