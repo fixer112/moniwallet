@@ -152,7 +152,7 @@ class _LoginState extends State<Login> {
               Widgets.text('Address'),
               Widgets.input(address, context,
                   icondata: FontAwesomeIcons.userAlt),
-              Widgets.text('User Type'),
+              Widgets.text('Gender'),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 15),
                 width: MediaQuery.of(context).size.width,
@@ -243,24 +243,32 @@ class _LoginState extends State<Login> {
         SizedBox(
           height: 10,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        Column(
           children: <Widget>[
-            InkWell(
-                child: Widgets.text(isLogin ? 'Register' : "Login",
-                    color: primaryColor),
-                onTap: () {
-                  isLogin = !isLogin;
-                  setState(() {}); //launchURL('$url/register'),
-                }),
-            Widgets.text(' | '),
-            InkWell(
-              child: Widgets.text('Forget Password?', color: primaryColor),
-              onTap: () => launchURL('$url/password/reset'),
-            )
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                InkWell(
+                    child: Widgets.text(isLogin ? 'Register' : "Login",
+                        color: primaryColor),
+                    onTap: () {
+                      isLogin = !isLogin;
+                      setState(() {}); //launchURL('$url/register'),
+                    }),
+                Widgets.text(' | '),
+                InkWell(
+                  child: Widgets.text('Forget Password?', color: primaryColor),
+                  onTap: () => launchURL('$url/password/reset'),
+                )
+              ],
+            ),
           ],
         ),
+        SizedBox(
+          height: 50,
+        ),
+
         //Expanded(child: Container()),
       ],
     );

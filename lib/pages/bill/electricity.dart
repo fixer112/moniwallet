@@ -41,9 +41,9 @@ class _ElectricityState extends State<Electricity> {
           user.getUser.settings['electricity_discount'].toString());
     });
 
-    if (user.getUser.settings['cable_alert'] != "" && cableAlert) {
-      Timer.run(
-          () => Widgets.alert(user.getUser.settings['cable_alert'], context));
+    if (user.getUser.settings['electricity_alert'] != "" && cableAlert) {
+      Timer.run(() =>
+          Widgets.alert(user.getUser.settings['electricity_alert'], context));
     }
     cableAlert = false;
     smart.addListener(() {
