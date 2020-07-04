@@ -10,6 +10,7 @@ import 'package:moniwallet/pages/app/home.dart';
 import 'package:moniwallet/pages/bill/airtime.dart';
 import 'package:moniwallet/pages/bill/cable.dart';
 import 'package:moniwallet/pages/bill/data.dart';
+import 'package:moniwallet/pages/bill/electricity.dart';
 import 'package:moniwallet/providers/user.dart';
 import 'package:moniwallet/value.dart';
 import 'package:moniwallet/widgets/widgets.dart';
@@ -84,6 +85,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     'Cable',
                     FontAwesomeIcons.tv,
                     action: () => Get.to(Cable()),
+                  ),
+                  Widgets.listTile(
+                    'Electricity',
+                    FontAwesomeIcons.lightbulb,
+                    action: () => Get.to(Electricity()),
                   ),
                   Expanded(child: Container()),
                   Container(

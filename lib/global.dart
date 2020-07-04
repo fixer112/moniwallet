@@ -89,6 +89,7 @@ Future transaction(
     var link =
         '$url/api/user/${user.getUser.id}/$type?api_token=${user.getUser.apiToken}&plathform=app';
     //link = isRefresh ? "$link?refresh=yes" : link;
+    print(link);
     final response = await http.post(link, body: data, headers: {
       'Accept': 'application/json',
     });

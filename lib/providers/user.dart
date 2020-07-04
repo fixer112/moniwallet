@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:moniwallet/global.dart';
 import 'package:moniwallet/models/user.dart';
 import 'package:moniwallet/pages/app/home.dart';
+import 'package:moniwallet/pages/auth/login.dart';
 import 'package:moniwallet/value.dart';
 import 'package:moniwallet/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -85,6 +86,34 @@ class UserModel extends ChangeNotifier {
 
       if (!isRefresh) Widgets.snackbar(msg: connErrorMsg);
       //return snackbar(connErrorMsg, context, _scaffoldKey);
+    }
+  }
+
+  Future register(Map data, context) async {
+    var user = Provider.of<UserModel>(context, listen: false);
+
+    try {
+      user.setLoading(true);
+      //print('loading');
+      var link = '$url/api/register';
+      link = link;
+      final response = await http.post(link, body: data, headers: {
+        'Accept': 'application/json',
+      });
+      user.setLoading(false);
+      var body = json.decode(response.body);
+      request(response, () async {}, context);
+      if (body.containsKey('login')) {
+        /* Widgets.alert(
+            'Registration successfull, Please login to continue.', context); */
+        Get.to(
+            Login(info: 'Registration successfull, Please login to continue.'));
+      }
+      return;
+    } catch (e) {
+      user.setLoading(false);
+      print(e);
+      Widgets.snackbar(msg: connErrorMsg);
     }
   }
 }
