@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -10,11 +12,20 @@ import 'package:moniwallet/providers/user.dart';
 import 'package:moniwallet/value.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  Crashlytics.instance.enableInDevMode = kDebugMode;
+Future<void> main() async {
+  await FirebaseCrashlytics.instance
+      .setCrashlyticsCollectionEnabled(kDebugMode);
+  //Crashlytics.instance.enableInDevMode = kDebugMode;
 
   // Pass all uncaught errors from the framework to Crashlytics.
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  Isolate.current.addErrorListener(RawReceivePort((pair) async {
+    final List<dynamic> errorAndStacktrace = pair;
+    await FirebaseCrashlytics.instance.recordError(
+      errorAndStacktrace.first,
+      errorAndStacktrace.last,
+    );
+  }).sendPort); //Crashlytics.instance.recordFlutterError;
   runApp(
     MultiProvider(
       providers: [

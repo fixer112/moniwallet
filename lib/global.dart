@@ -231,6 +231,13 @@ checkOut(
     ..companyName = Text("MoniWallet")
     ..displayFee = true
     ..staging = kDebugMode
+    ..acceptCardPayments = true
+    ..acceptAccountPayments = true
+    //..acceptMpesaPayments = true
+    //..acceptAchPayments = true
+    //..acceptGHMobileMoneyPayments = true
+    //..acceptUgMobileMoneyPayments = true
+    //..isPreAuth = true
     ..meta = {
       //'metaname': 'user_id',
       //'metavalue': user.user.id.toString(),
@@ -271,9 +278,10 @@ checkOut(
   //return;
   if (response.status == RaveStatus.success) {
     refreshLogin(context);
-    return Widgets.transactionAlert(
+    //return
+    Widgets.transactionAlert(
         "Payment of ${currencyFormat(amount)} successfull", context);
-    /* try {
+    try {
       user.setLoading(true);
       final response = await http.get('$url/verify/wallet/fund/$ref', headers: {
         'Accept': 'application/json',
@@ -282,17 +290,17 @@ checkOut(
       var body = json.decode(response.body);
       if (body.containsKey('success')) {
         refreshLogin(context);
-        return Widgets.transactionAlert(body['success'], context);
+        //return Widgets.transactionAlert(body['success'], context);
       }
-      request(response, () async {
+      /* request(response, () async {
         return;
-      });
+      }, context); */
     } catch (e) {
       print(e);
       user.setLoading(false);
       Widgets.snackbar(msg: connErrorMsg);
       //snackbar(connErrorMsg, context, _scaffoldKey);
-    } */
+    }
   } else {
     Widgets.snackbar(msg: response.message);
   }
@@ -418,3 +426,23 @@ Future bgMsgHdl(Map<String, dynamic> message) async {
   showNotificationWithDefaultSound(
       message['data']['title'], message['data']['body']);
 }
+
+/* makeMyRequest(code) async {
+  int subscriptionId = 1; // ussd code payload
+  try {
+    String ussdResponseMessage = await UssdService.makeRequest(
+      subscriptionId,
+      code,
+      Duration(seconds: 10), // timeout (optional) - default is 10 seconds
+    );
+    print("succes! message: $ussdResponseMessage");
+  } catch (e) {
+    debugPrint("error! code: ${e.code} - message: ${e.message}");
+  }
+}
+
+Future<void> launchUssd(String ussdCode) async {
+  var res = await Ussd.runUssd(ussdCode);
+  print(res);
+}
+ */

@@ -1,6 +1,5 @@
 import 'package:app_review/app_review.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:moniwallet/providers/user.dart';
 import 'package:moniwallet/value.dart';
 import 'package:moniwallet/widgets/widgets.dart';

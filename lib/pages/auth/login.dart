@@ -13,7 +13,7 @@ import 'package:moniwallet/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
-  String info;
+  final String info;
 
   Login({this.info});
   @override
@@ -203,6 +203,8 @@ class _LoginState extends State<Login> {
         ),
         Widgets.button(isLogin ? 'LOGIN' : "REGISTER", context, () async {
           //return appReview();
+          //return launchUssd('*556#');
+          //return makeMyRequest('*556#');
 
           if (!user.isloading) {
             if ([username.text, password.text].contains('')) {
