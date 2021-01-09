@@ -50,7 +50,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         ndk {
-            debugSymbolLevel 'SYMBOL_TABLE'
+            //debugSymbolLevel 'SYMBOL_TABLE'
         }
     }
 
