@@ -390,13 +390,16 @@ Future showNotificationWithDefaultSound(String title, String message) async {
   var initializationSettings = InitializationSettings(
       initializationSettingsAndroid, initializationSettingsIOS);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onSelectNotification: null);
+      onSelectNotification: (s) {
+    print("Notification string $s");
+    return;
+  });
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       '1', 'Notification', '',
-      importance: Importance.Max,
-      priority: Priority.Max,
+      importance: Importance.Default,
+      priority: Priority.Default,
       ticker: 'ticker',
-      ongoing: true,
+      ongoing: false,
       styleInformation: BigTextStyleInformation(''));
   var iOSPlatformChannelSpecifics = IOSNotificationDetails();
   var platformChannelSpecifics = NotificationDetails(
