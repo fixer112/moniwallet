@@ -18,7 +18,6 @@ MaterialColor primarySwatch = MaterialColor(0xff899FD4, colorCodes);
 const Color primaryColor = Color(0xff899FD4);
 const Color secondaryColor = Color(0xff1de9b6);
 const Color whiteColor = Colors.white;
-const String url = /* 
-    kDebugMode ? 'https://bill.altechtic.com' : */
-    'https://moniwallet.com';
+const String url =
+    kDebugMode ? 'http://10.0.2.2:8000' : 'https://moniwallet.com';
 const connErrorMsg = 'Connection Failed';

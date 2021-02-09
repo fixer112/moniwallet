@@ -231,7 +231,7 @@ checkOut(
     ..companyName = Text("MoniWallet")
     ..displayFee = true
     ..staging = kDebugMode
-    ..acceptCardPayments = true
+    ..acceptCardPayments = false
     ..acceptAccountPayments = true
     //..acceptMpesaPayments = true
     //..acceptAchPayments = true
