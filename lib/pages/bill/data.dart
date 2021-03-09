@@ -1,16 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:moniwallet/global.dart';
-import 'package:moniwallet/providers/user.dart';
-import 'package:moniwallet/value.dart';
-import 'package:moniwallet/widgets/drawer.dart';
-import 'package:moniwallet/widgets/widgets.dart';
+import '../../global.dart';
+import '../../providers/user.dart';
+import '../../value.dart';
+import '../../widgets/drawer.dart';
+import '../../widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class Data extends StatefulWidget {
-  Data({Key key}) : super(key: key);
+  Data({Key? key}) : super(key: key);
 
   _DataState createState() => _DataState();
 }
@@ -19,22 +20,26 @@ class _DataState extends State<Data> {
   var number = TextEditingController();
   var discount = TextEditingController();
   var password = TextEditingController();
-  String network;
+  String network = '';
   var plans;
-  double price;
-  String priceString;
-  double topup;
+  double price = 0;
+  String priceString = '';
+  double topup = 0;
   var plan;
   double discountPercentage = 0;
+  List networks = [];
   //{user.getUser.settings['Data_discount']}
   @override
   void initState() {
     //print("discount " + user.getUser.settings);
     var user = Provider.of<UserModel>(context, listen: false);
 
-    if (user.getUser.settings['data_alert'] != "" && dataAlert) {
+    networks = user.getUser?.settings['bills']['data'].keys.toList();
+    network = networks[0];
+
+    if (user.getUser?.settings['data_alert'] != "" && dataAlert) {
       Timer.run(
-          () => Widgets.alert(user.getUser.settings['data_alert'], context));
+          () => Widgets.alert(user.getUser?.settings['data_alert'], context));
     }
     dataAlert = false;
 
@@ -70,7 +75,6 @@ class _DataState extends State<Data> {
   }
 
   body(UserModel user) {
-    var networks = user.getUser.settings['bills']['data'].keys.toList();
     return ListView(
       children: <Widget>[
         Widgets.text('Mobile Number'),
@@ -98,14 +102,16 @@ class _DataState extends State<Data> {
                 hint: Widgets.text('Select Network'),
                 value: network,
 
-                onChanged: (value) {
+                onChanged: (dynamic value) {
                   closeKeybord(context);
-                  discountPercentage = double.parse(
-                      user.getUser.settings['data_discount'][value].toString());
+                  discountPercentage = double.parse(user
+                          .getUser?.settings['data_discount'][value]
+                          .toString() ??
+                      '0');
                   setState(() {
                     discount.text = '';
                     network = value;
-                    plans = user.getUser.settings['bills']['data'][value];
+                    plans = user.getUser?.settings['bills']['data'][value];
                   });
                 },
               ),
@@ -141,7 +147,7 @@ class _DataState extends State<Data> {
 
                   onChanged: plans == null
                       ? null
-                      : (value) {
+                      : (dynamic value) {
                           closeKeybord(context);
                           setState(() {
                             plan = value;

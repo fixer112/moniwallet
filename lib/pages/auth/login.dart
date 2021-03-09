@@ -2,20 +2,23 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:get/get.dart';
-import 'package:moniwallet/global.dart';
-import 'package:moniwallet/models/user.dart';
-import 'package:moniwallet/pages/app/home.dart';
-import 'package:moniwallet/providers/user.dart';
-import 'package:moniwallet/value.dart';
-import 'package:moniwallet/widgets/widgets.dart';
 import 'package:provider/provider.dart';
+
+import '../../global.dart';
+import '../../models/user.dart';
+import '../../providers/user.dart';
+import '../../value.dart';
+import '../../widgets/widgets.dart';
+import '../app/home.dart';
 
 class Login extends StatefulWidget {
   final String info;
 
-  Login({this.info});
+  Login({this.info = ''});
   @override
   _LoginState createState() => _LoginState();
 }
@@ -27,7 +30,7 @@ class _LoginState extends State<Login> {
   var lastName = TextEditingController();
   var email = TextEditingController();
   var number = TextEditingController();
-  String gender;
+  String gender = '';
   var address = TextEditingController();
   var password = TextEditingController();
   var confirmPassword = TextEditingController();
@@ -44,8 +47,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     var user = Provider.of<UserModel>(context, listen: false);
-    if (widget.info != null)
-      Timer.run(() => Widgets.alert(widget.info, context));
+    if (widget.info != '') Timer.run(() => Widgets.alert(widget.info, context));
     user.setLoading(true);
     getJson().then((u) {
       if (u != null) {
@@ -53,7 +55,7 @@ class _LoginState extends State<Login> {
         user.setUser(User.fromMap(json.decode(u)));
         //refreshLogin(context, refresh: false);
 
-        if (user.getUser != null) Get.to(Home());
+        if (!user.getUser.isBlank) Get.to(Home());
         user.setLoading(false);
 
         //setState(() {});
@@ -171,11 +173,11 @@ class _LoginState extends State<Login> {
                       hint: Widgets.text('Select Type'),
                       value: gender,
 
-                      onChanged: (value) {
+                      onChanged: (dynamic value) {
                         //print(plans);
                         closeKeybord(context);
                         setState(() {
-                          gender = value;
+                          gender = value.toString();
                         });
                       },
                     ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:get/get.dart';
-import 'package:moniwallet/global.dart';
-import 'package:moniwallet/pages/auth/login.dart';
-import 'package:moniwallet/widgets/widgets.dart';
+import '../../global.dart';
+import '../auth/login.dart';
+import '../../widgets/widgets.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:package_info/package_info.dart';
 //import 'package:quick_actions/quick_actions.dart';
 

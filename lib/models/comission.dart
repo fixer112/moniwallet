@@ -11,16 +11,16 @@ class Comission {
   final String status;
 
   Comission({
-    this.id,
-    this.amount,
-    this.balance,
-    this.createdAt,
-    this.desc,
-    this.ref,
-    this.level,
-    this.referralId,
-    this.userId,
-    this.status,
+    required this.id,
+    required this.amount,
+    required this.balance,
+    required this.createdAt,
+    required this.desc,
+    required this.ref,
+    required this.level,
+    required this.referralId,
+    required this.userId,
+    required this.status,
   });
 
   factory Comission.fromMap(Map data) {
@@ -33,7 +33,7 @@ class Comission {
       referralId: data['referral_id'] ?? '',
       level: data['level'],
       userId: data['user_id'],
-      createdAt: DateTime.parse(data['created_at']) ?? null,
+      createdAt: DateTime.parse(data['created_at']),
       status: data['status'],
     );
   }

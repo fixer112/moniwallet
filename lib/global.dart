@@ -1,29 +1,36 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:firebase_messaging/firebase_messaging.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:moniwallet/pages/app/upgrade_alert.dart';
-import 'package:moniwallet/pages/auth/login.dart';
-import 'package:moniwallet/providers/user.dart';
-import 'package:moniwallet/value.dart';
-import 'package:moniwallet/widgets/widgets.dart';
+import 'pages/app/upgrade_alert.dart';
+import 'pages/auth/login.dart';
+import 'providers/user.dart';
+import 'value.dart';
+import 'widgets/widgets.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:random_string/random_string.dart';
-import 'package:rave_flutter/rave_flutter.dart';
+// ignore: import_of_legacy_library_into_null_safe
+//import 'package:rave_flutter/rave_flutter.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:url_launcher/url_launcher.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:app_review/app_review.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:package_info/package_info.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:version/version.dart';
 
 bool generalAlert = true;
@@ -33,14 +40,15 @@ bool cableAlert = true;
 bool firstLoad = true;
 
 logout(context) async {
-  FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  // new FirebaseMessaging();
   var user = Provider.of<UserModel>(context, listen: false);
   if (user.user != null) {
     //FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
     firebaseMessaging.getToken().then((token) async {
       print('FCM Token: $token');
       var response = await http.post(
-          '$url/api/user/${user.user.id}/remove_token?api_token=${user.user.apiToken}',
+          '$url/api/user/${user.user?.id}/remove_token?api_token=${user.user?.apiToken}',
           body: {
             'app_token': token,
           },
@@ -87,7 +95,7 @@ Future transaction(
     user.setLoading(true);
     //print('loading');
     var link =
-        '$url/api/user/${user.getUser.id}/$type?api_token=${user.getUser.apiToken}&plathform=app';
+        '$url/api/user/${user.getUser?.id}/$type?api_token=${user.getUser?.apiToken}&plathform=app';
     //link = isRefresh ? "$link?refresh=yes" : link;
     print(link);
     final response = await http.post(link, body: data, headers: {
@@ -114,7 +122,7 @@ Future transaction(
   }
 }
 
-request(Response response, Function action, context) {
+request(http.Response response, Function action, context) {
   print(response.statusCode);
   var body = json.decode(response.body);
   print(body);
@@ -200,24 +208,25 @@ Widget checkNull(dynamic check, Widget widget, {String msg = ''}) {
       : widget;
 }
 
-String _getReference(id) {
+/* String _getReference(id) {
   return '${randomAlphaNumeric(7)}$id${randomAlphaNumeric(7)}';
-}
+} */
 
 checkOut(
   BuildContext context, {
-  @required UserModel user,
-  @required double amount,
+  required UserModel user,
+  required double amount,
 }) async {
+  Widgets.transactionAlert("Currently not available", context);
   //amount = amount + (amount * 1.4);
-  var publicKey = user.getUser.settings['rave_public_key_app'];
-  var encryptionKey = user.getUser.settings['rave_enc_key_app'];
-  var ref = "mw-${_getReference(user.user.id)}";
+  var publicKey = user.getUser?.settings['rave_public_key_app'];
+  var encryptionKey = user.getUser?.settings['rave_enc_key_app'];
+  //var ref = "mw-${_getReference(user.user?.id)}";
   print(publicKey);
   print(encryptionKey);
   //var charges = 1.4 / 100;
   //var chargeAmount = (amount / (1 - charges)).ceil() * 100;
-  var initializer = RavePayInitializer(
+  /* var initializer = RavePayInitializer(
       amount: amount, publicKey: publicKey, encryptionKey: encryptionKey)
     ..country = "NG"
     ..redirectUrl = '$url/verify/hook'
@@ -303,7 +312,7 @@ checkOut(
     }
   } else {
     Widgets.snackbar(msg: response.message);
-  }
+  } */
 }
 
 appReview({minCount = 2}) async {
@@ -336,7 +345,7 @@ Future<RemoteConfig> getRemoteConfig(BuildContext context) async {
     'latest_version_force': info.version,
     'latest_version': info.version,
   };
-  remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
+  remoteConfig.setConfigSettings(RemoteConfigSettings());
   await remoteConfig.setDefaults(defaults);
 
   try {
@@ -357,7 +366,8 @@ Future<RemoteConfig> getRemoteConfig(BuildContext context) async {
 Future<bool> checkUpdate(BuildContext context) async {
   var user = Provider.of<UserModel>(context, listen: false);
   var info = await initPackageInfo();
-  var latestVersion = Version.parse(user.getConfig.getString('latest_version'));
+  var latestVersion =
+      Version.parse(user.getConfig?.getString('latest_version'));
   var currentVersion = Version.parse(info.version);
   if (latestVersion > currentVersion) {
     Widgets.updateAlert(
@@ -371,7 +381,7 @@ Future<bool> checkUpdateForce(BuildContext context) async {
   var user = Provider.of<UserModel>(context, listen: false);
   var info = await initPackageInfo();
   var latestVersion =
-      Version.parse(user.getConfig.getString('latest_version_force'));
+      Version.parse(user.getConfig?.getString('latest_version_force'));
   var currentVersion = Version.parse(info.version);
   if (latestVersion > currentVersion) {
     Get.to(UpgradeAlert());
@@ -388,7 +398,7 @@ Future showNotificationWithDefaultSound(String title, String message) async {
   var initializationSettingsIOS =
       IOSInitializationSettings(onDidReceiveLocalNotification: null);
   var initializationSettings = InitializationSettings(
-      initializationSettingsAndroid, initializationSettingsIOS);
+      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
       onSelectNotification: (s) {
     print("Notification string $s");
@@ -396,14 +406,15 @@ Future showNotificationWithDefaultSound(String title, String message) async {
   });
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       '1', 'Notification', '',
-      importance: Importance.Default,
-      priority: Priority.Default,
+      importance: Importance.defaultImportance,
+      priority: Priority.defaultPriority,
       ticker: 'ticker',
       ongoing: false,
       styleInformation: BigTextStyleInformation(''));
   var iOSPlatformChannelSpecifics = IOSNotificationDetails();
   var platformChannelSpecifics = NotificationDetails(
-      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformChannelSpecifics);
   await flutterLocalNotificationsPlugin.show(
     0,
     '$title',
@@ -414,8 +425,8 @@ Future showNotificationWithDefaultSound(String title, String message) async {
   //Widgets.alert(message, Get.context, title: title);
 }
 
-Future bgMsgHdl(Map<String, dynamic> message) async {
-  print("onbgMessage: $message");
+Future bgMsgHdl(/* Map<String, dynamic> */ RemoteMessage message) async {
+  //print("onbgMessage: $message");
   /* Builder(
     builder: (context) {
       return Widgets.alert(message['data']['body'], context,
@@ -425,9 +436,10 @@ Future bgMsgHdl(Map<String, dynamic> message) async {
   /* if (Get.context != null)
     Widgets.alert(message['data']['body'], Get.context,
         title: message['data']['title']); */
-
-  showNotificationWithDefaultSound(
-      message['data']['title'], message['data']['body']);
+  if (!message.isBlank && message.notification != null) {
+    showNotificationWithDefaultSound(
+        message.notification.title, message.notification.body);
+  }
 }
 
 /* makeMyRequest(code) async {

@@ -1,16 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:moniwallet/global.dart';
-import 'package:moniwallet/providers/user.dart';
-import 'package:moniwallet/value.dart';
-import 'package:moniwallet/widgets/drawer.dart';
-import 'package:moniwallet/widgets/widgets.dart';
+import '../../global.dart';
+import '../../providers/user.dart';
+import '../../value.dart';
+import '../../widgets/drawer.dart';
+import '../../widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class Airtime extends StatefulWidget {
-  Airtime({Key key}) : super(key: key);
+  Airtime({Key? key}) : super(key: key);
 
   _AirtimeState createState() => _AirtimeState();
 }
@@ -20,16 +21,19 @@ class _AirtimeState extends State<Airtime> {
   var amount = TextEditingController();
   var discount = TextEditingController();
   var password = TextEditingController();
-  String network;
+  String network = '';
   double discountPercentage = 0;
+  List networks = [];
   //{user.getUser.settings['airtime_discount']}
   @override
   void initState() {
     var user = Provider.of<UserModel>(context, listen: false);
+    networks = user.getUser?.settings['bills']['airtime'].keys.toList();
+    network = networks[0];
 
-    if (user.getUser.settings['airtime_alert'] != "" && airtimeAlert) {
-      Timer.run(
-          () => Widgets.alert(user.getUser.settings['airtime_alert'], context));
+    if (user.getUser?.settings['airtime_alert'] != "" && airtimeAlert) {
+      Timer.run(() =>
+          Widgets.alert(user.getUser?.settings['airtime_alert'], context));
     }
     airtimeAlert = false;
 
@@ -75,7 +79,6 @@ class _AirtimeState extends State<Airtime> {
   }
 
   body(UserModel user) {
-    var networks = user.getUser.settings['bills']['airtime'].keys.toList();
     return ListView(
       children: <Widget>[
         Widgets.text('Mobile Number'),
@@ -102,14 +105,15 @@ class _AirtimeState extends State<Airtime> {
                 }),
                 hint: Widgets.text('Select Network'),
                 value: network,
-                onChanged: (value) {
+                onChanged: (dynamic value) {
                   //print(user.getUser.settings['airtime_discount'][value]);
 
                   setState(() {
                     network = value;
                     discountPercentage = double.parse(user
-                        .getUser.settings['airtime_discount'][value]
-                        .toString());
+                            .getUser?.settings['airtime_discount'][value]
+                            .toString() ??
+                        '0');
                     if (amount.text != '') {
                       discount.text = calDiscountAmount(
                               double.parse(amount.text), discountPercentage)

@@ -2,17 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:moniwallet/global.dart';
-import 'package:moniwallet/providers/user.dart';
-import 'package:moniwallet/value.dart';
-import 'package:moniwallet/widgets/drawer.dart';
-import 'package:moniwallet/widgets/widgets.dart';
+import '../../global.dart';
+import '../../providers/user.dart';
+import '../../value.dart';
+import '../../widgets/drawer.dart';
+import '../../widgets/widgets.dart';
 import 'package:provider/provider.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
 
 class Electricity extends StatefulWidget {
-  Electricity({Key key}) : super(key: key);
+  Electricity({Key? key}) : super(key: key);
 
   _ElectricityState createState() => _ElectricityState();
 }
@@ -24,26 +26,33 @@ class _ElectricityState extends State<Electricity> {
   var smart = TextEditingController();
   var name = TextEditingController();
   var amount = TextEditingController();
-  Map network;
-  String type;
-  String service;
+  Map<String, dynamic> network = {};
+  String type = '1';
+  String service = '';
   var multiples = 1;
   double discountPercentage = 0;
   bool enable = false;
-  Map<String, dynamic> data;
+  Map<String, dynamic> data = {};
+  Map<String, dynamic> electricity = {};
+  List<dynamic> products = [];
+
   //{user.getUser.settings['Cable_discount']}
   @override
   void initState() {
     var user = Provider.of<UserModel>(context, listen: false);
+    electricity = user.getUser?.settings['bills']['electricity'];
+    products = electricity['products'];
+    network = products[0];
+    //print(electricity);
 
     setState(() {
       discountPercentage = double.parse(
-          user.getUser.settings['electricity_discount'].toString());
+          user.getUser?.settings['electricity_discount'].toString() ?? '0');
     });
 
-    if (user.getUser.settings['electricity_alert'] != "" && cableAlert) {
+    if (user.getUser?.settings['electricity_alert'] != "" && cableAlert) {
       Timer.run(() =>
-          Widgets.alert(user.getUser.settings['electricity_alert'], context));
+          Widgets.alert(user.getUser?.settings['electricity_alert'], context));
     }
     cableAlert = false;
     smart.addListener(() {
@@ -51,7 +60,7 @@ class _ElectricityState extends State<Electricity> {
       print(network);
       print(service);
       //return;
-      if (network != null) {
+      if (network.isNotEmpty) {
         confirmIUC(service, smart.text, context);
       } else {
         setState(() {
@@ -64,9 +73,9 @@ class _ElectricityState extends State<Electricity> {
       print(amount.text);
 
       setState(() {
-        var electricity = user.getUser.settings['bills']['electricity'];
+        var electricity = user.getUser?.settings['bills']['electricity'];
         multiples = (int.parse(amount.text) /
-                user.getUser.settings['electricity_discount_multiple'])
+                user.getUser?.settings['electricity_discount_multiple'])
             .ceil();
         var charges = (electricity['charges'] * multiples) -
             ((discountPercentage / 100) * (electricity['charges'] * multiples));
@@ -158,9 +167,7 @@ class _ElectricityState extends State<Electricity> {
   }
 
   body(UserModel user) {
-    var electricity = user.getUser.settings['bills']['electricity'];
-    var products = electricity['products'];
-    //print(networks);
+    //print(products);
     //return Container();
 
     return ListView(
@@ -176,9 +183,32 @@ class _ElectricityState extends State<Electricity> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: DropdownButtonHideUnderline(
-              child: DropdownButton<Map>(
+              child: DropdownButton<Map<String, dynamic>>(
                 //isExpanded: true,
-                items: products.map<DropdownMenuItem<Map>>((product) {
+                items: products.map((product) {
+                  String string = product['name'];
+                  return DropdownMenuItem<Map<String, dynamic>>(
+                    child: Row(
+                      children: <Widget>[
+                        Text(string),
+                      ],
+                    ),
+                    value: product,
+                  );
+                }).toList(),
+                /* (products.length, (product) {
+                  String string = products[index]['name'];
+                  return DropdownMenuItem<Map<String, dynamic>>(
+                    child: Row(
+                      children: <Widget>[
+                        Text(string),
+                      ],
+                    ),
+                    value: products[index],
+                  );
+                  //Widgets.dropItem(string.toUpperCase(), string);
+                }).toList(), */
+                /* products.map<DropdownMenuItem<Map>>((product) {
                   //var string = networks[index];
                   return DropdownMenuItem<Map>(
                     child: Row(
@@ -188,11 +218,11 @@ class _ElectricityState extends State<Electricity> {
                     ),
                     value: product,
                   );
-                }).toList(),
+                }).toList(), */
                 hint: Widgets.text('Select Type'),
                 value: network,
 
-                onChanged: (value) {
+                onChanged: (dynamic value) {
                   //print(plans);
                   closeKeybord(context);
                   setState(() {
@@ -232,7 +262,7 @@ class _ElectricityState extends State<Electricity> {
                 value: type,
                 /* networkPrice != null ? networkPrice : null, */
 
-                onChanged: (value) {
+                onChanged: (dynamic value) {
                   closeKeybord(context);
                   setState(() {
                     type = value;
@@ -248,7 +278,7 @@ class _ElectricityState extends State<Electricity> {
           context,
           icondata: FontAwesomeIcons.calculator,
           type: TextInputType.number,
-          enable: service != null,
+          enable: service.isNotEmpty,
         ),
         Widgets.text('Customer Name'),
         Widgets.input(name, context,

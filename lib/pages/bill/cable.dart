@@ -2,17 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:moniwallet/global.dart';
-import 'package:moniwallet/providers/user.dart';
-import 'package:moniwallet/value.dart';
-import 'package:moniwallet/widgets/drawer.dart';
-import 'package:moniwallet/widgets/widgets.dart';
+import '../../global.dart';
+import '../../providers/user.dart';
+import '../../value.dart';
+import '../../widgets/drawer.dart';
+import '../../widgets/widgets.dart';
 import 'package:provider/provider.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
 
 class Cable extends StatefulWidget {
-  Cable({Key key}) : super(key: key);
+  Cable({Key? key}) : super(key: key);
 
   _CableState createState() => _CableState();
 }
@@ -23,23 +25,28 @@ class _CableState extends State<Cable> {
   var password = TextEditingController();
   var smart = TextEditingController();
   var name = TextEditingController();
-  String network;
+
   var plans;
-  double price;
-  String priceString;
-  double topup;
+  double price = 0;
+  String priceString = '';
+  double topup = 0;
   var plan;
   double discountPercentage = 0;
   bool enable = false;
-  Map<String, dynamic> data;
+  Map<String, dynamic> data = {};
+  List networks = [];
+  String network = '';
+
   //{user.getUser.settings['Cable_discount']}
   @override
   void initState() {
     var user = Provider.of<UserModel>(context, listen: false);
+    networks = user.getUser?.settings['bills']['cable'].keys.toSet().toList();
+    network = networks[0];
 
-    if (user.getUser.settings['cable_alert'] != "" && cableAlert) {
+    if (user.getUser?.settings['cable_alert'] != "" && cableAlert) {
       Timer.run(
-          () => Widgets.alert(user.getUser.settings['cable_alert'], context));
+          () => Widgets.alert(user.getUser?.settings['cable_alert'], context));
     }
     cableAlert = false;
     smart.addListener(() {
@@ -143,7 +150,7 @@ class _CableState extends State<Cable> {
   }
 
   body(UserModel user) {
-    var networks = user.getUser.settings['bills']['cable'].keys.toList();
+    //print(networks);
     return ListView(
       children: <Widget>[
         Widgets.text('Cable Type'),
@@ -161,12 +168,13 @@ class _CableState extends State<Cable> {
                 //isExpanded: true,
                 items: List.generate(networks.length, (index) {
                   String string = networks[index];
+                  //print(string);
                   return Widgets.dropItem(string.toUpperCase(), string);
                 }),
                 hint: Widgets.text('Select Type'),
                 value: network,
 
-                onChanged: (value) {
+                onChanged: (dynamic value) {
                   //print(plans);
                   closeKeybord(context);
                   setState(() {
@@ -175,13 +183,14 @@ class _CableState extends State<Cable> {
                     smart.value = TextEditingValue(text: "");
                   });
                   discountPercentage = double.parse(user
-                      .getUser.settings['cable_discount'][value]
-                      .toString());
+                          .getUser?.settings['cable_discount'][value]
+                          .toString() ??
+                      '0');
                   setState(() {
                     discount.text = '';
                     network = value;
                     print(network);
-                    plans = user.getUser.settings['bills']['cable'][value];
+                    plans = user.getUser?.settings['bills']['cable'][value];
                   });
                 },
               ),
@@ -233,7 +242,7 @@ class _CableState extends State<Cable> {
                   value: plan,
                   /* networkPrice != null ? networkPrice : null, */
 
-                  onChanged: (value) {
+                  onChanged: (dynamic value) {
                     closeKeybord(context);
                     setState(() {
                       plan = value;
@@ -264,7 +273,7 @@ class _CableState extends State<Cable> {
             enable: enable),
         Widgets.button('Continue', context, () {
           if (!user.isloading) {
-            if (!enable || priceString == '' || data == null) {
+            if (!enable || priceString == '' || data.isEmpty) {
               return Widgets.snackbar(msg: 'Validate Smart card number');
             }
             if ([number.text, password.text, network, priceString, smart.text]

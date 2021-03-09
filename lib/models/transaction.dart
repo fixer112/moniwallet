@@ -12,17 +12,17 @@ class Transaction {
   final DateTime createdAt;
 
   Transaction({
-    this.id,
-    this.amount,
-    this.balance,
-    this.createdAt,
-    this.desc,
-    this.isOnline,
-    this.reason,
-    this.ref,
-    this.type,
-    this.userId,
-    this.status,
+    required this.id,
+    required this.amount,
+    required this.balance,
+    required this.createdAt,
+    required this.desc,
+    required this.isOnline,
+    required this.reason,
+    required this.ref,
+    required this.type,
+    required this.userId,
+    required this.status,
   });
 
   factory Transaction.fromMap(Map data) {
@@ -36,7 +36,7 @@ class Transaction {
       type: data['type'],
       ref: data['ref'],
       userId: data['user_id'],
-      createdAt: DateTime.parse(data['created_at']) ?? null,
+      createdAt: DateTime.parse(data['created_at']),
       status: data['status'],
     );
   }

@@ -1,10 +1,12 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:app_review/app_review.dart';
 import 'package:flutter/material.dart';
-import 'package:moniwallet/providers/user.dart';
-import 'package:moniwallet/value.dart';
-import 'package:moniwallet/widgets/widgets.dart';
+import '../../providers/user.dart';
+import '../../value.dart';
+import '../../widgets/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:moniwallet/global.dart';
+import '../../global.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:version/version.dart';
 
 class UpgradeAlert extends StatefulWidget {
@@ -19,7 +21,8 @@ class _UpgradeAlertState extends State<UpgradeAlert> {
   void initState() {
     var user = Provider.of<UserModel>(context, listen: false);
     initPackageInfo().then((info) {
-      latestVersion = Version.parse(user.getConfig.getString('latest_version'));
+      latestVersion =
+          Version.parse(user.getConfig?.getString('latest_version'));
       currentVersion = Version.parse(info.version);
       setState(() {});
     });
@@ -59,9 +62,14 @@ class _UpgradeAlertState extends State<UpgradeAlert> {
                         height: 5,
                       ),
                       Container(
-                        height: 54,
-                        margin: EdgeInsets.symmetric(vertical: 15),
-                        child: FlatButton(
+                          height: 54,
+                          margin: EdgeInsets.symmetric(vertical: 15),
+                          child: Widgets.button(
+                              'UPDATE NOW',
+                              context,
+                              () async => await AppReview
+                                  .storeListing) /* FlatButton(
+                          //style: TextButton.styleFrom(),
                           disabledColor: Colors.grey,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6)),
@@ -71,8 +79,8 @@ class _UpgradeAlertState extends State<UpgradeAlert> {
                             style: TextStyle(color: whiteColor),
                           ),
                           onPressed: () async => await AppReview.storeListing,
-                        ),
-                      ),
+                        ), */
+                          ),
                     ],
                   ),
                 ),

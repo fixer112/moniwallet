@@ -1,9 +1,13 @@
 import 'dart:convert';
 
 //import 'package:firebase_remote_config/firebase_remote_config.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:get/get.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
 import 'package:moniwallet/global.dart';
 import 'package:moniwallet/models/user.dart';
@@ -13,9 +17,9 @@ import 'package:moniwallet/value.dart';
 import 'package:moniwallet/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
-class UserModel extends ChangeNotifier {
-  User user;
-  RemoteConfig _config;
+class UserModel with ChangeNotifier, DiagnosticableTreeMixin {
+  User? user;
+  RemoteConfig? _config;
   bool _isLoading = false;
 
   setUser(User newUser) {
@@ -28,9 +32,9 @@ class UserModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  RemoteConfig get getConfig => _config;
+  RemoteConfig? get getConfig => _config;
 
-  User get getUser => user;
+  User? get getUser => user;
 
   setLoading(bool value) {
     _isLoading = value;

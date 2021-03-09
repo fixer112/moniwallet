@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
-import 'package:moniwallet/models/comission.dart';
-import 'package:moniwallet/models/transaction.dart';
-import 'package:moniwallet/providers/user.dart';
-import 'package:moniwallet/value.dart';
-import 'package:moniwallet/widgets/widgets.dart';
+import 'comission.dart';
+import 'transaction.dart';
+import '../providers/user.dart';
+import '../value.dart';
+import '../widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class User {
@@ -34,28 +35,28 @@ class User {
   final String packageName;
 
   User({
-    this.id,
-    this.username,
-    this.firstname,
-    this.fullname,
-    this.lastname,
-    this.email,
-    this.apiToken,
-    this.type,
-    this.profilePic,
-    this.createdAt,
-    this.latestComissions,
-    this.latestTransactions,
-    this.settings,
-    this.isActive,
-    this.isReseller,
-    this.number,
-    this.points,
-    this.balance,
-    this.referralBalance,
-    this.packageName,
-    this.accountNumber,
-    this.bankName,
+    required this.id,
+    required this.username,
+    required this.firstname,
+    required this.fullname,
+    required this.lastname,
+    required this.email,
+    required this.apiToken,
+    required this.type,
+    required this.profilePic,
+    required this.createdAt,
+    required this.latestComissions,
+    required this.latestTransactions,
+    required this.settings,
+    required this.isActive,
+    required this.isReseller,
+    required this.number,
+    required this.points,
+    required this.balance,
+    required this.referralBalance,
+    required this.packageName,
+    required this.accountNumber,
+    required this.bankName,
   });
 
   factory User.fromMap(Map data) {
@@ -79,7 +80,7 @@ class User {
           .toList()),
       latestComissions: List<Comission>.from(
           data['latest_comissions'].map((i) => Comission.fromMap(i)).toList()),
-      createdAt: DateTime.parse(data['created_at']) ?? null,
+      createdAt: DateTime.parse(data['created_at']),
       balance: double.parse(data['balance'].toString()),
       referralBalance: double.parse(data['referral_balance'].toString()),
       packageName: data['package_name'],

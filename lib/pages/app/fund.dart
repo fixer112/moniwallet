@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:moniwallet/global.dart';
-import 'package:moniwallet/providers/user.dart';
-import 'package:moniwallet/value.dart';
-import 'package:moniwallet/widgets/drawer.dart';
-import 'package:moniwallet/widgets/widgets.dart';
+import '../../global.dart';
+import '../../providers/user.dart';
+import '../../value.dart';
+import '../../widgets/drawer.dart';
+import '../../widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class Fund extends StatefulWidget {
@@ -29,9 +30,10 @@ class _FundState extends State<Fund> {
           drawer: DrawerWidget(),
           appBar: Widgets.appbar('Fund Wallet', context),
           body: Consumer<UserModel>(builder: (context, user, child) {
-            var minFund = user.getUser.settings['min_fund'].toString();
-            var maxFund = user.getUser.settings['max_fund'].toString();
-            bool enablePayment = user.getUser.settings['enable_online_payment'];
+            var minFund = user.getUser?.settings['min_fund'].toString() ?? '0';
+            var maxFund = user.getUser?.settings['max_fund'].toString() ?? '0';
+            bool enablePayment =
+                user.getUser?.settings['enable_online_payment'];
 
             return Widgets.body(
                 user,
@@ -56,7 +58,7 @@ class _FundState extends State<Fund> {
                                 height: 15,
                               ),
                               Widgets.text(
-                                  "Transfer charges of ${user.getUser.settings['transfer_fee']}% applies.",
+                                  "Transfer charges of ${user.getUser?.settings['transfer_fee']}% applies.",
                                   color: Colors.white),
                               SizedBox(
                                 height: 15,
@@ -73,19 +75,19 @@ class _FundState extends State<Fund> {
                                 height: 10,
                               ),
                               Widgets.text(
-                                  'Bank Name: ${user.getUser.bankName}',
+                                  'Bank Name: ${user.getUser?.bankName}',
                                   color: secondaryColor),
                               SizedBox(
                                 height: 10,
                               ),
                               Widgets.text(
-                                  'Account Name: MoniWallet-${user.getUser.fullname}',
+                                  'Account Name: MoniWallet-${user.getUser?.fullname}',
                                   color: secondaryColor),
                               SizedBox(
                                 height: 10,
                               ),
                               Widgets.text(
-                                  'Account Number: ${user.getUser.accountNumber}',
+                                  'Account Number: ${user.getUser?.accountNumber}',
                                   color: secondaryColor),
                             ],
                           ),

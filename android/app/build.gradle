@@ -70,7 +70,7 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled true
             useProguard true
-
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro' 
         }
     }
@@ -82,9 +82,9 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.firebase:firebase-messaging:20.2.0'
+    //implementation 'com.google.firebase:firebase-messaging:20.2.0'
 }
 
-apply plugin: 'io.fabric'
+//apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
-//apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.crashlytics'
